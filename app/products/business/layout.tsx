@@ -6,8 +6,7 @@ export const metadata: Metadata = {
   description:
     "Columbus Pro is an AI location-intelligence platform built for site selection, due diligence, and location research. Ask the map, generate research reports, and access a live data catalogue.",
   openGraph: {
-    title:
-      "Columbus Pro is a new Agentic GIS for Business / Built with frontier Geospatial Intelligence to make exploration and discovery easier / Location and geographic intelligence AI",
+    title: "Columbus Pro / New Agentic GIS for Business",
     description:
       "Columbus Pro is an AI location-intelligence platform built for site selection, due diligence, and location research. Ask the map, generate research reports, and access a live data catalogue.",
     url: "https://columbus.earth/products/business",

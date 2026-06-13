@@ -18,8 +18,7 @@ export const metadata: Metadata = {
   description:
     "The Applied AI lab building street smart AI. Columbus Pro for enterprise-grade location intelligence. Elio is a social map for city and travel exploration.",
   openGraph: {
-    title:
-      "Columbus Earth / Frontier Geospatial Intelligence with AI / Building a thinking earth / Product Company",
+    title: "Columbus Earth / Building a thinking earth / AI Maps Company",
     description:
       "The Applied AI lab building street smart AI. Columbus Pro for enterprise-grade location intelligence. Elio is a social map for city and travel exploration.",
     url: "https://columbus.earth",

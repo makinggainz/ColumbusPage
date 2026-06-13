@@ -9,8 +9,7 @@ export const metadata: Metadata = {
   description:
     "Columbus Earth is building the Large Geospatial Model — geospatial foundation models that bring street-smart, physical-world AI to maps.",
   openGraph: {
-    title:
-      "Research at Columbus Earth / Building Geospatial Foundation Models / Applying AI to maps / Building street smart AI",
+    title: "Research / Columbus Earth",
     description:
       "Columbus Earth is building the Large Geospatial Model — geospatial foundation models that bring street-smart, physical-world AI to maps.",
     url: "https://columbus.earth/research",

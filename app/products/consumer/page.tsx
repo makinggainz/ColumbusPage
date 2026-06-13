@@ -12,8 +12,7 @@ export const metadata: Metadata = {
   description:
     "Elio is a social map app — your personal AI assistant for your city, your travels, and everything in between, including itinerary planning.",
   openGraph: {
-    title:
-      "Elio, is a Social Super Map / A personal assistant for maps / City and travel exploration app",
+    title: "Elio / Social Super Map with AI",
     description:
       "Elio is a social map app — your personal AI assistant for your city, your travels, and everything in between, including itinerary planning.",
     url: "https://columbus.earth/products/consumer",
