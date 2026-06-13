@@ -19,7 +19,7 @@
  * its wide video-banner treatment with text at the top.
  */
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 
@@ -82,14 +82,16 @@ const CSS = `
   position: relative;
   overflow: hidden;
   border-radius: 13px;
-  padding: 28px;
+  /* Generous top padding on mobile so the brand row sits well below the
+     top-LEFT cut-out (40px tall) with clear breathing room. */
+  padding: 58px 26px 28px;
   text-decoration: none;
   color: #0F173C;
   display: flex;
   flex-direction: column;
   min-height: 360px;
 }
-@media (min-width: 640px)  { .bp-card { padding: 32px; min-height: 400px; } }
+@media (min-width: 640px)  { .bp-card { padding: 60px 32px 32px; min-height: 400px; } }
 @media (min-width: 1024px) { .bp-card { padding: 40px; height: 500px; min-height: 0; } }
 
 /* Per-product surfaces — bases behind each tile's blurred hero photo.
@@ -153,42 +155,6 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   transform-origin: center 78%;
 }
 
-/* ── Columbus capability rail (business-page DNA) ──────────────────────
-   A vertical list of IconChips — the same device the business page uses for
-   its feature rail. Each chip is a 34px circle in a single neutral tint with
-   the matching stroke icon, beside a navy label. Even rhythm is owned by the
-   parent .bp-text-bottom gap, so no margins here. */
-.bp-features {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin: 0;
-}
-.bp-feature {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-}
-.bp-feature-chip {
-  width: 34px;
-  height: 34px;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-}
-.bp-feature-chip svg { display: block; }
-.bp-feature-label {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: #E6EAF3;
-}
-@media (max-width: 1023px) {
-  .bp-features { gap: 12px; }
-}
-
 /* ── Audience cut-out (top-right) ──────────────────────────────────────
    White notch tucked into the card's top-right corner, with the ::before /
    ::after radial-gradient fillets that smooth the two inner junctions (the
@@ -226,6 +192,30 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bp-notch::before { top: 0; left: -13px; }
 .bp-notch::after  { bottom: -13px; right: 0; }
 
+/* Mobile: tuck the cut-out into the top-LEFT corner instead — a horizontal
+   mirror of the desktop top-right placement, fillets included. */
+@media (max-width: 1023px) {
+  .bp-notch {
+    right: auto;
+    left: 0;
+    border-radius: 13px 0 13px 0;
+    border-left: none;
+    border-right: 1px solid #E7E7F1;
+  }
+  .bp-notch::before,
+  .bp-notch::after {
+    background: radial-gradient(
+      circle at right bottom,
+      rgba(255, 255, 255, 0) 11.5px,
+      #E7E7F1 12.25px,
+      #E7E7F1 12.75px,
+      #FFFFFF 13.5px
+    );
+  }
+  .bp-notch::before { left: auto; right: -13px; }
+  .bp-notch::after  { right: auto; left: 0; }
+}
+
 /* Label colour keyed to each tile's surface so it reads as part of it:
    Columbus = navy ink of the gray tile; Elio = the tile's blue; Research
    = the lighter banner blue. */
@@ -261,13 +251,6 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   gap: 16px;
   margin-top: 18px;
 }
-/* Columbus top zone: brand + tagline grouped together. */
-.bp-col-head {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-}
 @media (min-width: 1024px) {
   .bp-card--columbus .bp-text,
   .bp-card--elio .bp-text {
@@ -278,11 +261,6 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-card--columbus .bp-text-bottom,
   .bp-card--elio .bp-text-bottom { margin-top: auto; }
   .bp-card--wide .bp-text { max-width: 34rem; }
-  /* Columbus splits into three zones — brand+tagline (top), capability rail
-     (centred), CTA (bottom). space-between distributes them top/centre/bottom,
-     and the CTA's bottom edge lines up with the MacBook base. */
-  .bp-card--columbus .bp-text { justify-content: space-between; }
-  .bp-card--columbus .bp-text-bottom { margin-top: 0; }
 }
 
 /* ── Brand row ── */
@@ -305,7 +283,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 /* Brand name — sized just above the design-system h4 on the standard tiles
    (h2 still drives the wide Research banner). */
 .bp-name {
-  font-size: clamp(22px, 4.2vw, 30px);
+  font-size: clamp(27px, 6vw, 30px);
   line-height: 1.08;
   font-weight: 500;
   letter-spacing: -0.025em;
@@ -316,14 +294,16 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   line-height: var(--typography--h2--line-height);
 }
 .bp-card--research .bp-name { font-family: var(--font-display); color: #0F173C; }
-.bp-card--columbus .bp-name { color: #FFFFFF; font-weight: 600; }
+/* Axiforma sits optically high next to the globe mark — nudge it down so the
+   wordmark reads vertically centred with the logo. */
+.bp-card--columbus .bp-name { color: #FFFFFF; font-weight: 600; transform: translateY(2px); }
 
 /* Elio wordmark image — rendered white over the photo (soft drop-shadow for
    legibility), sized so its glyphs read at roughly the Columbus name's cap
    height. */
 .bp-elio-name {
   width: auto;
-  height: clamp(32px, 7.4vw, 38px);
+  height: clamp(41px, 11vw, 42px);
   object-fit: contain;
   flex: 0 0 auto;
   margin-left: -4px;
@@ -398,9 +378,9 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-cta, .bp-cta-arrow { transition: none; }
 }
 
-/* Research CTA — borderless text link (no pill background). Navy label that
-   swaps to the accent on hover, sized up from the pill's small caption and
-   paired with a slightly larger ArrowDots glyph. */
+/* Research CTA — borderless text link (no pill background). The label + arrow
+   read as one cohesive unit: both navy at rest (arrow inherits the label
+   colour) and both swap to the accent on hover, with a tight gap. */
 .bp-card--research .bp-cta {
   background-color: transparent;
   padding: 0;
@@ -409,18 +389,16 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   font-size: 1.0625rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  gap: 12px;
+  gap: 7px;
 }
-.bp-card--research .bp-cta-arrow svg {
-  width: 14px;
-  height: 15px;
+.bp-card--research .bp-cta-arrow {
+  color: inherit;
+  transform: translateY(0.5px);
 }
-/* Without the pill's padding the link crowds the tagline — open the vertical
-   rhythm so brand → tagline → link read as evenly spaced. */
-.bp-card--research .bp-tagline { margin-bottom: 4px; }
+/* Even vertical rhythm: brand → tagline → link equally spaced. */
 .bp-card--research .bp-text-bottom {
-  margin-top: 22px;
-  gap: 22px;
+  margin-top: 20px;
+  gap: 18px;
 }
 
 /* Elio (over the photo): white tagline + a white CTA pill with navy ink that
@@ -450,9 +428,10 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bp-visual {
   position: relative;
   z-index: 1;
-  margin-top: 24px;
-  align-self: flex-end;
-  width: 86%;
+  margin-top: 28px;
+  /* On mobile the visual sits in normal flow, centred below the text. */
+  align-self: center;
+  width: 82%;
   transition: transform 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
@@ -599,6 +578,17 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
     bottom: -70px;
   }
 }
+
+/* ── Mobile: open up the stacked layout so the content breathes ──────────
+   More room below the cut-out, bigger gaps between brand → tagline → CTA, and
+   a larger gap before the product visual. The taller cards are intentional. */
+@media (max-width: 1023px) {
+  .bp-card { padding-top: 66px; padding-bottom: 46px; min-height: 480px; }
+  .bp-card--wide { min-height: 360px; }
+  .bp-text-bottom,
+  .bp-card--research .bp-text-bottom { margin-top: 30px; gap: 26px; }
+  .bp-visual { margin-top: 50px; }
+}
 `;
 
 interface Product {
@@ -676,78 +666,6 @@ function ArrowDots() {
     </svg>
   );
 }
-
-/* Stroke-glyph wrapper matching the business-page IconChip spec (24-vbox,
-   stroke 1.8, round caps) so the Columbus capability rail reads as a slice of
-   that page. currentColor lets each chip tint its own icon. */
-function Glyph({ children }: { children: ReactNode }) {
-  return (
-    <svg
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {children}
-    </svg>
-  );
-}
-
-/* Single neutral tint for every capability chip — light on the dark navy
-   tile (no per-feature colour) so the rail reads quiet and uniform. Used at
-   ~13% alpha for the circle, full for the icon. */
-const FEATURE_COLOR = "#FFFFFF";
-
-/* Columbus capability rail — the four flagship features from the business
-   page (Map Chat / Data Catalogue / Agentic Research / Dashboard). */
-const COLUMBUS_FEATURES = [
-  {
-    label: "Map Chat",
-    icon: (
-      <Glyph>
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-      </Glyph>
-    ),
-  },
-  {
-    label: "Data Catalogue",
-    icon: (
-      <Glyph>
-        <ellipse cx="12" cy="5" rx="8" ry="3" />
-        <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
-        <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
-      </Glyph>
-    ),
-  },
-  {
-    label: "Agentic Research",
-    icon: (
-      <Glyph>
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <path d="M14 2v6h6" />
-        <path d="m11 13 4 4" />
-        <path d="M15 11h3v3" />
-      </Glyph>
-    ),
-  },
-  {
-    label: "Dashboard",
-    icon: (
-      <Glyph>
-        <rect x="3" y="3" width="7" height="7" />
-        <rect x="14" y="3" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" />
-      </Glyph>
-    ),
-  },
-];
 
 /* Full-bleed looping background <video> for the Research banner. Forces the
    muted IDL property + kicks off play() via a ref so muted-autoplay isn't
@@ -917,41 +835,14 @@ export function BentoProducts() {
                 </div>
               )}
 
-              {/* Text rail. Columbus splits into three zones — brand+tagline
-                  (top), capability rail (centred), CTA (bottom, aligned to the
-                  MacBook base). Elio/Research keep brand-top + tagline+CTA. */}
-              {isColumbus ? (
-                <div className="bp-text">
-                  <div className="bp-col-head">
-                    {brand}
-                    <p className="bp-tagline">{p.tagline}</p>
-                  </div>
-
-                  <ul className="bp-features">
-                    {COLUMBUS_FEATURES.map((f) => (
-                      <li key={f.label} className="bp-feature">
-                        <span
-                          className="bp-feature-chip"
-                          style={{ backgroundColor: `${FEATURE_COLOR}21`, color: FEATURE_COLOR }}
-                        >
-                          {f.icon}
-                        </span>
-                        <span className="bp-feature-label">{f.label}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="bp-text-bottom">{cta}</div>
+              {/* Text rail: brand top, tagline + CTA bottom. */}
+              <div className="bp-text">
+                {brand}
+                <div className="bp-text-bottom">
+                  <p className="bp-tagline">{p.tagline}</p>
+                  {cta}
                 </div>
-              ) : (
-                <div className="bp-text">
-                  {brand}
-                  <div className="bp-text-bottom">
-                    <p className="bp-tagline">{p.tagline}</p>
-                    {cta}
-                  </div>
-                </div>
-              )}
+              </div>
 
               {/* Columbus screenshot inside a MacBook Pro mockup, bottom-right. */}
               {p.visual && (

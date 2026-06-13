@@ -45,7 +45,7 @@ const DISCOVERY_CARDS: DiscoveryCard[] = [
     label: "activities",
     img: "/ConsumerPgMedia/ExampleSpots/(17).jpeg",
     avatars: [
-      "/CompanyPgMedia/Alex.png",
+      "/CompanyPgMedia/AlexFounder.png",
       "/ConsumerPgMedia/ProfilePics/profile4.jpg",
       "/ConsumerPgMedia/ProfilePics/profile3.png",
     ],
