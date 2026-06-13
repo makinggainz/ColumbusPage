@@ -8,13 +8,14 @@ import { JsonLd } from "@/components/JsonLd";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 export const metadata: Metadata = {
-  title: "Elio — The Social Super Map",
+  title: { absolute: "Elio / Social Super Map / Personal AI Map Assistant" },
   description:
-    "Elio makes maps feel alive — for your city, your travels, and everything in between. Available on desktop and mobile.",
+    "Elio is a social map app — your personal AI assistant for your city, your travels, and everything in between, including itinerary planning.",
   openGraph: {
-    title: "Elio — The Social Super Map | Columbus Earth",
+    title:
+      "Elio, is a Social Super Map / A personal assistant for maps / City and travel exploration app",
     description:
-      "Elio makes maps feel alive — for your city, your travels, and everything in between. Available on desktop and mobile.",
+      "Elio is a social map app — your personal AI assistant for your city, your travels, and everything in between, including itinerary planning.",
     url: "https://columbus.earth/products/consumer",
   },
 };

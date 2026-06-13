@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Columbus Pro — Agentic GIS for Enterprise",
+  title: { absolute: "Columbus Pro / All-in-one GIS, Exploration, Discovery with AI" },
   description:
-    "Columbus Pro is a new kind of mapping platform built for site selection, due diligence, and location research. Ask the map, generate research reports, and access a live data catalogue.",
+    "Columbus Pro is an AI location-intelligence platform built for site selection, due diligence, and location research. Ask the map, generate research reports, and access a live data catalogue.",
   openGraph: {
-    title: "Columbus Pro — Agentic GIS for Enterprise",
+    title:
+      "Columbus Pro is a new Agentic GIS for Business / Built with frontier Geospatial Intelligence to make exploration and discovery easier / Location and geographic intelligence AI",
     description:
-      "Columbus Pro is a new kind of mapping platform built for site selection, due diligence, and location research. Ask the map, generate research reports, and access a live data catalogue.",
+      "Columbus Pro is an AI location-intelligence platform built for site selection, due diligence, and location research. Ask the map, generate research reports, and access a live data catalogue.",
     url: "https://columbus.earth/products/business",
   },
 };

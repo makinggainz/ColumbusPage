@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     default: "Columbus Earth — AI-Powered Geospatial Intelligence",
   },
   description:
-    "Columbus Earth builds frontier geospatial AI — the Large Geospatial Model, Columbus Pro for enterprise site selection, and Elio for travel exploration.",
+    "Frontier AI for maps, Agentic GIS, City and Travel exploration assistant | Columbus Earth",
   icons: {
     icon: "/favicon.png",
   },
@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     siteName: "Columbus Earth",
     images: [
       {
-        url: "/HomeHeroBg.png",
-        width: 1400,
-        height: 900,
+        url: "/OGImage.png",
+        width: 2400,
+        height: 1060,
         alt: "Columbus Earth — AI-Powered Geospatial Intelligence",
       },
     ],

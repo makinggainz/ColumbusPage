@@ -18,13 +18,19 @@ import styles from "./company.module.css";
 // MEDIA_LOADING_PLAYBOOK.md.
 import groupFounders from "@/public/CompanyPgMedia/grouppic-founders.png";
 import davidAvatar from "@/public/CompanyPgMedia/David.png";
-import alexAvatar from "@/public/CompanyPgMedia/Alex.png";
+import alexAvatar from "@/public/CompanyPgMedia/AlexFounder.png";
 import erickAvatar from "@/public/CompanyPgMedia/Erick.png";
 
 export const metadata: Metadata = {
-  title: "Company — Columbus Earth",
+  title: { absolute: "Company / Columbus Earth" },
   description:
-    "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model.",
+    "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model — an applied AI lab for maps and geospatial intelligence.",
+  openGraph: {
+    title: "Our mission at Columbus Earth. Find out about us.",
+    description:
+      "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model — an applied AI lab for maps and geospatial intelligence.",
+    url: "https://columbus.earth/company",
+  },
 };
 
 /**
