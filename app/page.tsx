@@ -13,13 +13,15 @@ import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 export const metadata: Metadata = {
-  title: "Columbus Earth — AI-Powered Geospatial Intelligence",
+  // `absolute` bypasses the root layout's "%s | Columbus Earth" template.
+  title: { absolute: "Columbus / AI Geospatial Intelligence / Elio Social Maps / Agentic GIS / Research" },
   description:
-    "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
+    "The Applied AI lab building street smart AI. Columbus Pro for enterprise-grade location intelligence. Elio is a social map for city and travel exploration.",
   openGraph: {
-    title: "Columbus Earth — AI-Powered Geospatial Intelligence",
+    title:
+      "Columbus Earth / Frontier Geospatial Intelligence with AI / Building a thinking earth / Product Company",
     description:
-      "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
+      "The Applied AI lab building street smart AI. Columbus Pro for enterprise-grade location intelligence. Elio is a social map for city and travel exploration.",
     url: "https://columbus.earth",
   },
 };

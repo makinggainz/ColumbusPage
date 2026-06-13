@@ -46,6 +46,9 @@ export default function NotFound() {
   // unmount so other routes scroll normally.
   useEffect(() => {
     track.pageNotFound(window.location.pathname);
+    // This route is a client component, so it can't export `metadata`;
+    // set the browser-tab title imperatively instead.
+    document.title = "Come back to sea / Columbus Earth";
   }, []);
 
   useEffect(() => {

@@ -5,13 +5,14 @@ import { JsonLd } from "@/components/JsonLd";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 export const metadata: Metadata = {
-  title: "Research — Large Geospatial Model",
+  title: { absolute: "Research / LGM at Columbus Earth" },
   description:
-    "Columbus Earth is building a brain for the earth — the Large Geospatial Model. An interactive thesis on frontier geospatial intelligence.",
+    "Columbus Earth is building the Large Geospatial Model — geospatial foundation models that bring street-smart, physical-world AI to maps.",
   openGraph: {
-    title: "Research — Large Geospatial Model | Columbus Earth",
+    title:
+      "Research at Columbus Earth / Building Geospatial Foundation Models / Applying AI to maps / Building street smart AI",
     description:
-      "Columbus Earth is building a brain for the earth — the Large Geospatial Model. An interactive thesis on frontier geospatial intelligence.",
+      "Columbus Earth is building the Large Geospatial Model — geospatial foundation models that bring street-smart, physical-world AI to maps.",
     url: "https://columbus.earth/research",
   },
 };

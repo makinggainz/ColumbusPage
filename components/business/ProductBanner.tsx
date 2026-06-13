@@ -75,7 +75,15 @@ export default function ProductBanner() {
             color: "var(--ent-text-primary)",
           }}
         >
-          <strong style={{ color: "#0A1342" }}>Columbus Pro</strong>
+          <strong
+            style={{
+              color: "#0A1342",
+              fontFamily:
+                "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+            }}
+          >
+            Columbus Pro
+          </strong>
           {" — "}
           GIS made effortless
         </h2>
