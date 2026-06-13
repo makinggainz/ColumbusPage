@@ -243,55 +243,53 @@ export default function FinalCTASection() {
       </div>
 
       {/* ═══════════ DESKTOP HERO (lg: and above) ═══════════ */}
-      {/* Section is FRAME_WIDTH × HERO_HEIGHT (1728 × 1548). The globe
-          image is anchored to the bottom at its natural 1728×1298 aspect;
-          a 250px sky band at the TOP gives the headline + CTA room to
-          breathe over pure white, never overlapping the earth. */}
-      <div className="hidden lg:block relative w-full overflow-hidden" style={{ height: `min(${HERO_HEIGHT}px, calc(${HERO_HEIGHT} / ${FRAME_WIDTH} * 100vw))` }}>
+      {/* Keeps the FRAME_WIDTH × HERO_HEIGHT (1728 × 1548) aspect but is fully
+          FLUID: it fills 100% of the viewport width at any size — scaling DOWN
+          on narrow laptops and UP when the page is zoomed out or on monitors
+          wider than 1728 — rather than the old fixed 1728px frame that left
+          white gaps past that width. (The previous `transform: scale(min(1,
+          100vw / 1728))` was invalid CSS — `min()` can't compare a unitless 1
+          with a length — so the browser dropped it and the frame never scaled.)
+          The globe is bottom-anchored at its 1728×1298 aspect; the ~250px sky
+          band at the top (the gap between the two aspects) gives the headline +
+          CTA room over pure white. Cards are positioned as %s of the image
+          wrapper (same scheme as mobile) so they stay pinned to the same globe
+          features at every width. */}
+      <div
+        className="hidden lg:block relative w-full overflow-hidden"
+        style={{ aspectRatio: `${FRAME_WIDTH} / ${HERO_HEIGHT}` }}
+      >
+        {/* Globe artwork — anchored to the BOTTOM at its natural aspect. */}
         <div
-          className="absolute inset-0 origin-top overflow-hidden"
-          style={{
-            width: FRAME_WIDTH,
-            height: HERO_HEIGHT,
-            transform: `scale(min(1, 100vw / ${FRAME_WIDTH}))`,
-            transformOrigin: "top left",
-            left: "50%",
-            marginLeft: -FRAME_WIDTH / 2,
-          }}
+          className="absolute left-0 right-0 bottom-0"
+          style={{ aspectRatio: `${FRAME_WIDTH} / ${IMAGE_HEIGHT}` }}
         >
-          <div className="relative" style={{ width: FRAME_WIDTH, height: HERO_HEIGHT }}>
-            {/* Globe artwork — anchored to the BOTTOM of the inner frame,
-                at its natural aspect. The top SKY_BAND px stays empty so
-                the headline + CTA above sit on pure white sky. */}
-            <div
-              className="absolute left-0 right-0"
-              style={{ bottom: 0, height: IMAGE_HEIGHT }}
-            >
-              {/* Desktop variant — same image, sized to the inner frame.
-                  Not LCP (this is the page-bottom CTA), so no `priority`. */}
-              <Image
-                src={globeEnding}
-                alt="Elio across the globe"
-                fill
-                sizes="(min-width: 1728px) 1728px, 100vw"
-                placeholder="blur"
-                loading={warm ? "eager" : "lazy"}
-                fetchPriority={warm ? "low" : undefined}
-                className="object-cover"
-              />
+          {/* Below-the-fold final CTA — not LCP, so no `priority`. */}
+          <Image
+            src={globeEnding}
+            alt="Elio across the globe"
+            fill
+            sizes="100vw"
+            placeholder="blur"
+            loading={warm ? "eager" : "lazy"}
+            fetchPriority={warm ? "low" : undefined}
+            className="object-cover"
+          />
 
-              {/* Floating discovery cards — five UI overlays scattered
-                  over the globe (photo card w/ avatars, photo card
-                  selected, place card w/ pill, stacked photo deck,
-                  place card only). Each card fades + scales in
-                  staggered as the section enters view. Coords are in
-                  the 1728×1298 image-wrapper space, not the outer
-                  section, so adding sky band doesn't move the cards. */}
-              {DISCOVERY_CARDS.map((p, i) => (
-                <DiscoveryCardView key={i} p={p} leftPx={p.left} topPx={p.top} visible={pinsVisible} />
-              ))}
-            </div>
-          </div>
+          {/* Floating discovery cards — five UI overlays scattered over the
+              globe. Positioned as %s of the 1728×1298 image wrapper so they
+              track the globe at any width; desktop card SIZES stay fixed px
+              (no `mobile` flag) so they read as crisp floating UI accents
+              rather than ballooning when the page is zoomed out. */}
+          {DISCOVERY_CARDS.map((p, i) => (
+            <DiscoveryCardView
+              key={i}
+              p={p}
+              leftPct={(p.left / FRAME_WIDTH) * 100}
+              topPct={(p.top / IMAGE_HEIGHT) * 100}
+              visible={pinsVisible}
+            />
+          ))}
         </div>
 
         {/* TOP-ANCHORED CONTENT — sits over the white sky band at the top
