@@ -6,8 +6,7 @@ export const metadata: Metadata = {
   description:
     "Research notes, releases, and papers from the Columbus Earth team on geospatial intelligence and AI for maps.",
   openGraph: {
-    title:
-      "Read interesting blogs from the Columbus team. Technology, Travel Guides, and updates",
+    title: "News, Travel Guides, Tech Blogs / Columbus Earth",
     description:
       "Research notes, releases, and papers from the Columbus Earth team on geospatial intelligence and AI for maps.",
     url: "https://columbus.earth/blog",

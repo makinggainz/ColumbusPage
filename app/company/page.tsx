@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   description:
     "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model — an applied AI lab for maps and geospatial intelligence.",
   openGraph: {
-    title: "Our mission at Columbus Earth. Find out about us.",
+    title: "Our mission / About Columbus Earth",
     description:
       "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model — an applied AI lab for maps and geospatial intelligence.",
     url: "https://columbus.earth/company",
