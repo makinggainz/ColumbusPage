@@ -80,6 +80,10 @@ type IndustryContent = {
   reportMeta: string;
   reportBody: string;
   mapLabel: string;
+  /* Per-industry research map image (…/MapVisuals/Research.png). Rendered
+     over mapBackground, which now only shows as a tint while the image loads
+     or if it fails. */
+  mapImage: string;
   /* CSS gradient stand-in for the research map visualization. Same
      palette idea as DataManagerMockup's MAPS — picked per industry so
      each research view reads distinctly. */
@@ -97,29 +101,30 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     ],
 
     prompt:
-      "Show me which neighborhoods in Amsterdam have seen the largest rent increases over the past 5 years",
+      "Find me the top 15 development sites for mid-rise residential in Valencia province, fitting our typical envelope: 8,000–20,000 m², residential or convertible zoning, within 30 minutes of city center, with positive demographic trajectory",
     recap:
-      "Here are the Amsterdam neighborhoods with the steepest free-sector rent growth over the past five years",
-    panelTitle: "Top 4 Neighborhoods by Free-Sector Rent Growth",
-    panelSubtitle: "Last 5 Years",
+      "Here are the top 15 development sites for mid-rise residential across Valencia province that fit your envelope, zoning, and demographic criteria — the leading four shown",
+    panelTitle: "Top Sites by Development Suitability",
+    panelSubtitle: "Valencia Province · Mid-Rise · 8,000–20,000 m²",
     items: [
-      { rank: 1, label: "De Pijp-Noord", delta: "+28.4%" },
-      { rank: 2, label: "Oud-West", delta: "+24.1%" },
-      { rank: 3, label: "Indische Buurt", delta: "+21.6%" },
-      { rank: 4, label: "Oostelijke Eilanden", delta: "+19.3%" },
+      { rank: 1, label: "Quart de Poblet — Parc Central", delta: "+95" },
+      { rank: 2, label: "Paterna — Lloma Llarga", delta: "+91" },
+      { rank: 3, label: "Alboraya — Patacona", delta: "+87" },
+      { rank: 4, label: "Mislata — Quart Sud", delta: "+83" },
     ],
     takeaway:
-      "Rent growth concentrates in tram-served neighborhoods with tight new-build pipelines; independent business turnover lags the price rise by 18–24 months.",
+      "The strongest sites cluster along the metro-served western corridor, where convertible zoning and net in-migration outpace the current mid-rise pipeline; PATRICOVA flood-zone exposure is the main constraint to screen next.",
     reportTitle:
-      "Amsterdam Neighborhoods Rent Growth: Tram-Served Pipeline Convergence",
+      "Valencia Province Mid-Rise Sites: Western Metro-Corridor Convergence",
     reportMeta: "Site Suitability Report · Residential · Jan 2026",
     reportBody:
-      "Free-sector rent growth across Amsterdam's central neighborhoods has concentrated in tram-served corridors over the past five years, with De Pijp-Noord, Oud-West, Indische Buurt, and Oostelijke Eilanden each posting double-digit cumulative gains. The pattern aligns with tight new-build pipelines along the 24- and 25-tram lines, where municipal woningbouw permits have lagged demand by 18–24 months.",
-    mapLabel: "Amsterdam · Free-Sector Rent Δ (5y)",
+      "Across Valencia province, the development sites best matching the 8,000–20,000 m² mid-rise envelope concentrate along the western metro corridor — Quart de Poblet, Paterna, Alboraya, and Mislata each clear the suitability threshold on zoning convertibility, sub-30-minute access to the city center, and positive demographic trajectory. These municipalities pair residential or readily convertible parcels with net in-migration running ahead of the current mid-rise pipeline.",
+    mapLabel: "Valencia Province · Site Suitability",
+    mapImage: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/Research.png",
     mapBackground:
       "radial-gradient(circle at 52% 60%, #b32a1c 0%, #d35a30 18%, #e88a3a 38%, #f4b465 58%, #fce0a7 80%, #f8efdb 100%)",
     aiSuggestion:
-      "Consider adding a vacancy-rate overlay to confirm pipeline tightness across the four leading neighborhoods.",
+      "Consider layering the PATRICOVA flood-risk map to screen the western-corridor parcels before shortlisting.",
   },
   "commercial-real-estate": {
     breadcrumb: ["French Flagship Rollout", "36-Month Sequence"],
@@ -148,6 +153,7 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     reportBody:
       "Lyon's Presqu'île and Bordeaux's Rue Sainte-Catherine corridor lead a shortlist of 47 evaluated French metros for flagship-format expansion. The recommended 36-month sequence prioritizes catchment purchasing power and tourism-driven footfall outside the Paris ring, with secondary anchors in Marseille's Vieux-Port and Lille's Rue Faidherbe — both showing forward demographic momentum and a thin competitor flagship density.",
     mapLabel: "France · Flagship Suitability Score",
+    mapImage: "/BusinessPgMedia/CREUseCases/MapVisuals/Research.png",
     mapBackground:
       "radial-gradient(ellipse 65% 55% at 35% 50%, #4a76c8 0%, #6892d4 30%, #a3c1e8 55%, #d6e6f4 85%, #eef4fa 100%)",
     aiSuggestion:
@@ -180,6 +186,7 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     reportBody:
       "This comparative study evaluates two culturally significant Tokyo neighborhoods — Shimokitazawa (Setagaya Ward, Odakyū / Keiō Inokashira lines) and Kōenji (Suginami Ward, JR Chūō line). Both districts are widely recognized as centers of independent music, vintage retail, small-scale theater, and youth subculture, and both have undergone notable transformation over the past decade.",
     mapLabel: "Tokyo Wards · Youth-Culture Density",
+    mapImage: "/BusinessPgMedia/AcademicUseCase/MapVisuals/Research.png",
     mapBackground:
       "conic-gradient(from 140deg at 50% 50%, #5e8acc 0%, #88aedb 18%, #c9d8e8 38%, #f5d390 62%, #f0a850 82%, #5e8acc 100%)",
     aiSuggestion:
@@ -212,6 +219,7 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     reportBody:
       "Borneo's tropical forests have shrunk faster than nearly any other habitat on Earth. Between 2003 and 2023 the island lost more than 6 million hectares, much of it prime orangutan territory. This report combines two decades of satellite forest cover data, official palm oil concession boundaries, NASA fire detection records, and population surveys from leading conservation NGOs to identify the strongholds that remain.",
     mapLabel: "Borneo · Forest Integrity & Loss",
+    mapImage: "/BusinessPgMedia/EnvironmentalUseCases/MapVisuals/Research.png",
     mapBackground:
       "radial-gradient(ellipse 60% 50% at 60% 45%, #2d5a2a 0%, #4a8642 25%, #b7c878 50%, #e8c168 72%, #c75a32 100%)",
     aiSuggestion:
@@ -244,6 +252,7 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     reportBody:
       "This report presents a comparative analysis of two of the chain's most strategically significant regional trade-area clusters: Madrid Sur — 84 stores across Móstoles, Fuenlabrada, Leganés, Getafe, and Parla along the C-5 Cercanías line and A-42 corridor — and Vallès Occidental, comprising 62 stores across the Catalan industrial belt along the R4 Rodalies line and AP-7 axis.",
     mapLabel: "Spain · Core-Shopper Density",
+    mapImage: "/BusinessPgMedia/GeomarketingUseCases/MapVisuals/Research.png",
     mapBackground:
       "radial-gradient(circle at 30% 40%, rgba(255,150,80,0.7) 0%, transparent 22%)," +
       "radial-gradient(circle at 70% 60%, rgba(120,80,200,0.6) 0%, transparent 26%)," +
@@ -278,6 +287,7 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     reportBody:
       "This report evaluates three candidate parcels in the Municipio V district of Rome for the planned 2026–2028 affordable housing initiative under the PNRR housing modernization programme. The objective is to identify the parcel best suited to deliver approximately 180 residential units while meeting the programme's mandated targets for energy performance, social integration, and accessibility.",
     mapLabel: "Rome Municipio V · PNRR Suitability",
+    mapImage: "/BusinessPgMedia/UrbanInfrastructureUseCases/MapVisuals/Research.png",
     mapBackground:
       "linear-gradient(135deg, #d6e2ee 0%, #8da4c0 38%, #4a6b8c 68%, #2c4564 100%)," +
       "repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 18px)," +
@@ -780,8 +790,10 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
             {c.reportBody}
           </p>
 
-          {/* Map visualization — gradient-painted card with edit
-              affordances overlaid (Interact / Expand) in the corners. */}
+          {/* Map visualization — per-industry research map image with edit
+              affordances overlaid (Interact / Expand) in the corners. The
+              mapBackground gradient shows only as a tint while the image
+              loads or if it fails. */}
           <div
             style={{
               position: "relative",
@@ -793,15 +805,21 @@ export default function AgenticResearchMockup({ industryId }: AgenticResearchMoc
               background: c.mapBackground,
             }}
           >
-            <div
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={c.mapImage}
+              alt=""
               aria-hidden
               style={{
+                // Cover the whole card (no gaps), anchored to the TOP so the
+                // image reads from its top edge and any excess height is
+                // clipped at the bottom rather than centre-cropped.
                 position: "absolute",
                 inset: 0,
-                backgroundImage:
-                  "repeating-linear-gradient(35deg, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 1px, transparent 1px, transparent 22px)," +
-                  "repeating-linear-gradient(-55deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 30px)",
-                pointerEvents: "none",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "top",
               }}
             />
             <MapChip>{c.mapLabel}</MapChip>
