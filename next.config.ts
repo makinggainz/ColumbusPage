@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Canonical host: send www.columbus.earth → apex columbus.earth (308).
+      // Without this both hosts return 200 and serve duplicate content, so
+      // search engines index them separately (Google indexed the apex, Bing/
+      // DuckDuckGo the www) and never consolidate onto one URL.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.columbus.earth" }],
+        destination: "https://columbus.earth/:path*",
+        permanent: true,
+      },
       { source: "/products",    destination: "/products/consumer",   permanent: true },
       { source: "/business",  destination: "/products/business", permanent: true },
       // Back-compat: the page was formerly branded "enterprise" — keep old URLs alive.
