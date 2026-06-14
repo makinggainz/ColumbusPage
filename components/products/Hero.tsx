@@ -80,6 +80,19 @@ const TAIL_VH = 40;
 // 0.5 (half-hidden) reading, so the phone reads as a fuller object
 // peeking up under the hero text rather than just its top edge.
 const PHONE_PEEK = 0.4;
+// ── Phone size (desktop / lg) ────────────────────────────────────────────
+// PolarX device geometry: aspect 0.4949 (w/h). The phone is vertically
+// centred in the 100dvh sticky stage, so on short viewports a fixed 360px
+// width (→ ~727px tall) overflows the scene and crowds the labels. Instead
+// the phone HEIGHT is held to PHONE_VH_MAX of the viewport and the width is
+// derived back from it, capped at PHONE_W_LG so tall screens are unchanged.
+// Result: as the viewport shortens the device shrinks proportionally and
+// always sits healthily in its scene.
+const PHONE_W_LG = 360;
+const PHONE_ASPECT = 0.4949; // width / height
+const PHONE_VH_MAX = 0.76; // device height ≤ 76% of viewport height
+const phoneWidthForHeight = (vpH: number) =>
+  Math.round(Math.min(PHONE_W_LG, vpH * PHONE_VH_MAX * PHONE_ASPECT));
 // Trim applied to PHONE_PEEK (in px) so the phone's starting position
 // lands ~15px higher than the raw fraction would put it — more of the
 // mockup is visible the instant the hero loads.
@@ -234,6 +247,10 @@ export default function Hero() {
   const [phase, setPhase] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isLg, setIsLg] = useState(true);
+  // Viewport height, used to scale the pinned phone on short screens.
+  // Defaults to a tall value so the first paint (pre-effect) renders the
+  // phone at its full PHONE_W_LG cap, matching the prior fixed behaviour.
+  const [vpH, setVpH] = useState(1000);
   // Tracks the LABEL currently nearest the viewport anchor (0 or 1),
   // so the phone product-shot swaps per-label. Updated in onScroll
   // alongside phase.
@@ -273,6 +290,7 @@ export default function Hero() {
       const lg = window.innerWidth >= 1024;
       isLgRef.current = lg;
       setIsLg(lg);
+      setVpH(window.innerHeight);
     };
     check();
     window.addEventListener("resize", check);
@@ -383,8 +401,9 @@ export default function Hero() {
         // bottom − window.scrollY; add scrollY back to recover it.
         const ctaBottomAtRest =
           ctaRowEl.getBoundingClientRect().bottom + window.scrollY;
-        // Phone height at lg matches the JSX (phoneW = 360, aspect 0.4949).
-        const phH = Math.round(360 / 0.4949);
+        // Phone height at lg matches the JSX — derived from the same
+        // viewport-scaled width so the gap math tracks the rendered device.
+        const phH = Math.round(phoneWidthForHeight(vh) / 0.4949);
         const MIN_PHONE_GAP = 80;
         const minPhoneTopY = ctaBottomAtRest + MIN_PHONE_GAP;
         // phoneTopY = 0.5·vh + peekY − 0.5·phH  →  solve for peekY.
@@ -476,7 +495,7 @@ export default function Hero() {
     };
   }, []);
 
-  const phoneW = isLg ? 360 : 240;
+  const phoneW = isLg ? phoneWidthForHeight(vpH) : 240;
   // PolarX device geometry — aspect-ratio 0.4949, corner radius 42/277, bezel 6/277.
   const phoneH = Math.round(phoneW / 0.4949);
   const phoneRadius = Math.round(phoneW * 0.152);

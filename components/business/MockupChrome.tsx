@@ -39,6 +39,10 @@ const CRUMB = "#818181";
 /* Shared font size for the top-bar title row (Columbus wordmark + breadcrumb).
    Exported so views can match their right-side actions to it. */
 export const TOPBAR_TITLE_FONT = "clamp(1rem, 1.72cqw, 1.46rem)";
+/* Breadcrumb (the "/ page title" to the right of the wordmark) reads as
+   secondary navigation context, so it sits one type-step (~12.5%) below the
+   "Columbus" wordmark rather than matching it. */
+export const TOPBAR_CRUMB_FONT = "clamp(0.875rem, 1.5cqw, 1.28rem)";
 
 /* Earth mascot (with headset) baked into the bottom-right of every source
    frame — drawn here as a real <img> so it stays in every view. */
@@ -394,14 +398,14 @@ export default function MockupChrome({
                   color: CRUMB,
                   fontWeight: "normal",
                   margin: "0 clamp(5px, 0.7cqw, 10px)",
-                  fontSize: TOPBAR_TITLE_FONT,
+                  fontSize: TOPBAR_CRUMB_FONT,
                 }}
               >
                 /
               </span>
               <span
                 style={{
-                  fontSize: TOPBAR_TITLE_FONT,
+                  fontSize: TOPBAR_CRUMB_FONT,
                   fontWeight: "normal",
                   // Real page titles take the navy "Columbus" ink; only the
                   // "untitled chat" placeholder stays muted gray.
@@ -449,6 +453,54 @@ export default function MockupChrome({
           zIndex: 6,
         }}
       />
+
+      {/* Rounded 4px inner-corner fillet at the rail × top-bar junction.
+          The content pane's top-left corner is rounded like a real window: the
+          arc bows toward the chrome corner so the rail's vertical hairline and
+          the top bar's horizontal hairline flow into a smooth quarter-circle.
+
+          SEAMLESS JOIN: the CSS hairlines render with their 1px stroke CENTERS
+          at SVG y=0.5 (top bar border-bottom) and x=0.5 (rail divider border-
+          left), since both are 1px borders inside their border boxes. For the
+          arc to flow into them without a step it must be TANGENT to those
+          centerlines — so the arc starts at (8.5, 0.5) (horizontal tangent) and
+          ends at (0.5, 8.5) (vertical tangent), with center at the pane-interior
+          corner (8.5, 8.5). The straight stubs (10→8.5 at top, 8.5→11 down the
+          left) carry the line out to the box edges where the CSS hairlines
+          continue beyond, so the whole line is continuous.
+
+          The SVG sits at left:railWidth, top:barHeight-1px and is painted on top
+          (zIndex 7): a base #FFFFFF fill repaints the chrome corner, the #FDFDFD
+          fill repaints the content pane, and the boundary is masked by the
+          single hairline stroke (stub → arc → stub). Both fills meet only along
+          that stroke, so the 2/255 white-vs-pane edge is never exposed. */}
+      <svg
+        aria-hidden
+        style={{
+          position: "absolute",
+          left: railWidth,
+          top: `calc(${barHeight} - 1px)`,
+          width: 10,
+          height: 11,
+          display: "block",
+          overflow: "visible",
+          zIndex: 7,
+          pointerEvents: "none",
+        }}
+        viewBox="0 0 10 11"
+      >
+        {/* Base chrome-white over the whole junction box (rail + top-bar side). */}
+        <path d="M 0 0 H 10 V 11 H 0 Z" fill="#FFFFFF" />
+        {/* Content pane fill on the pane side of the line. */}
+        <path d="M 10 0.5 L 8.5 0.5 A 8 8 0 0 0 0.5 8.5 L 0.5 11 L 10 11 Z" fill="#FDFDFD" />
+        {/* The continuous hairline: top stub → tangent arc → left stub. */}
+        <path
+          d="M 10 0.5 L 8.5 0.5 A 8 8 0 0 0 0.5 8.5 L 0.5 11"
+          fill="none"
+          stroke={HAIRLINE}
+          strokeWidth="1"
+        />
+      </svg>
 
       {/* ── Inner content pane ── */}
       <div

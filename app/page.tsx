@@ -13,14 +13,21 @@ import { MediaPrefetcher } from "@/components/ui/MediaPrefetcher";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 
 export const metadata: Metadata = {
+  // Clean, human-readable title. The previous slash-stuffed keyword title
+  // ("Columbus / AI Geospatial Intelligence / Elio Social Maps / …") was the
+  // kind Google rewrites down to just the brand ("Columbus Earth") in the
+  // SERP — a concise title is kept verbatim instead.
   // `absolute` bypasses the root layout's "%s | Columbus Earth" template.
-  title: { absolute: "Columbus / AI Geospatial Intelligence / Elio Social Maps / Agentic GIS / Research" },
+  title: { absolute: "Columbus Earth — AI-Powered Geospatial Intelligence" },
   description:
-    "The Applied AI lab building street smart AI. Columbus Pro for enterprise-grade location intelligence. Elio is a social map for city and travel exploration.",
+    "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
+  // Self-referencing canonical so Google consolidates the apex/www duplicates
+  // onto https://columbus.earth/ (resolved via metadataBase).
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Columbus Earth / Building a thinking earth / AI Maps Company",
     description:
-      "The Applied AI lab building street smart AI. Columbus Pro for enterprise-grade location intelligence. Elio is a social map for city and travel exploration.",
+      "The Applied AI lab building a thinking earth. Columbus Pro for enterprise location intelligence. Elio — the social super map for city and travel exploration.",
     url: "https://columbus.earth",
   },
 };
