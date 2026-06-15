@@ -191,7 +191,7 @@ const NOTIFICATIONS: Notif[] = [
     title: "Sophie saved a spot in Barcelona",
     sub: "Wants to know if you’re free Sunday · 20 min ago",
     kind: "avatar",
-    avatar: "/ConsumerPgMedia/ProfilePics/profile2.png",
+    avatar: "/ConsumerPgMedia/ProfilePics/profile3.jpeg",
     x: -440, y: -210, rot: -3, behind: false, delay: 0,
   },
   // Top-right — Elio built your trip (sharp, in front). Uses the
@@ -206,14 +206,13 @@ const NOTIFICATIONS: Notif[] = [
   {
     title: "Hidden coffee shop opened nearby",
     sub: "4 min walk · Trending today",
-    kind: "icon",
-    emoji: "📍",
-    badge: "#0F1B2D",
+    kind: "avatar",
+    avatar: "/ConsumerPgMedia/ExampleSpots/NewCafe.jpeg",
     x: -320, y: 30, rot: -4, behind: true, delay: 0.22,
   },
   // Mid-right — Trending events (faded, behind)
   {
-    title: "Trending in Williamsburg this weekend",
+    title: "Trending in San Francisco this weekend",
     sub: "8 events Saturday night",
     kind: "icon",
     emoji: "📅",
@@ -222,10 +221,10 @@ const NOTIFICATIONS: Notif[] = [
   },
   // Bottom-left — Sarah & James joined (sharp, in front)
   {
-    title: "Sarah & James joined your trip",
+    title: "Olivia & Sam joined your trip",
     sub: "Tokyo Gems · 14 spots saved together",
     kind: "stacked",
-    avatars: ["/CompanyPgMedia/David.png", "/CompanyPgMedia/Erick.png"],
+    avatars: ["/ConsumerPgMedia/ProfilePics/profile5.jpeg", "/ConsumerPgMedia/ProfilePics/profile6.jpeg"],
     x: -420, y: 240, rot: -2, behind: false, delay: 0.34,
   },
   // Bottom-right — Rain swap (sharp, in front)
