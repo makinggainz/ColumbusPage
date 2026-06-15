@@ -17,9 +17,9 @@ import styles from "./company.module.css";
 // imports give next/image a real blurDataURL for instant blur-up. See
 // MEDIA_LOADING_PLAYBOOK.md.
 import groupFounders from "@/public/CompanyPgMedia/grouppic-founders.png";
-import davidAvatar from "@/public/CompanyPgMedia/David.png";
+import davidAvatar from "@/public/CompanyPgMedia/DavidFounder Profile.jpg";
 import alexAvatar from "@/public/CompanyPgMedia/AlexFounder.png";
-import erickAvatar from "@/public/CompanyPgMedia/Erick.png";
+import erickAvatar from "@/public/CompanyPgMedia/ErickFounder Profile.jpg";
 
 export const metadata: Metadata = {
   title: { absolute: "Company / Columbus Earth" },
