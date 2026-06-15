@@ -228,11 +228,58 @@
 }
 
 .pillar {
+  position: relative;
+  overflow: hidden;
   border: 1px solid var(--color-gridline);
   border-radius: 13px;
   padding: 28px 24px;
   display: flex;
   flex-direction: column;
+  /* Hover lift — a slight drop shadow eases in (with a 1px rise) on
+     cursor hover. */
+  transition: box-shadow 240ms ease, transform 240ms ease;
+}
+.pillar:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 26px -10px rgba(11, 27, 43, 0.18),
+    0 2px 8px -3px rgba(11, 27, 43, 0.10);
+}
+/* Ripple-fill on hover — mirrors the Business "Enterprise-grade
+   capabilities" tiles: a small grey circle near the index marker scales
+   up to wash the whole card; content stays above it via z-index. */
+.pillar > * {
+  position: relative;
+  z-index: 1;
+}
+.pillar::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 44px;
+  left: 50px;
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  border-radius: 50%;
+  background: #fafafa;
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+.pillar:hover::before {
+  transform: scale(26);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pillar {
+    transition: none;
+  }
+  .pillar:hover {
+    transform: none;
+  }
+  .pillar::before {
+    transition: none;
+  }
 }
 @media (min-width: 768px) {
   .pillar {
@@ -248,6 +295,11 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   color: var(--color-muted);
+  transition: color 240ms ease;
+}
+/* On card hover the index marker shifts to the site accent. */
+.pillar:hover .pillarIndex {
+  color: var(--color-accent);
 }
 
 /* Pillar title — uses the global .h5 type step; this rule only adds the
@@ -673,6 +725,23 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Hover lift — a slight drop shadow eases in (with a 1px rise) on
+     cursor hover. */
+  transition: box-shadow 240ms ease, transform 240ms ease;
+}
+.quoteCard:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 26px -10px rgba(11, 27, 43, 0.18),
+    0 2px 8px -3px rgba(11, 27, 43, 0.10);
+}
+@media (prefers-reduced-motion: reduce) {
+  .quoteCard {
+    transition: none;
+  }
+  .quoteCard:hover {
+    transform: none;
+  }
 }
 @media (min-width: 768px) {
   .quoteCard {
