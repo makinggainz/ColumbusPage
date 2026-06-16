@@ -251,7 +251,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             360-px viewport can't fit them in a row; desktop keeps the
             original horizontal row. */}
         <div className="mt-auto border-t pt-4 pb-2 flex flex-col items-center text-center gap-2 md:flex-row md:items-center md:justify-between md:text-left md:gap-4 text-[13px] border-white/15 text-white">
-          <span>Columbus Earth &copy; 2026</span>
+          <span>Columbus Earth Corp. &copy; 2026</span>
           <span className="italic text-[12px]">Website made by hand, no AI.</span>
           <span className="italic text-[12px]">Nature always prevails</span>
           <span>www.columbus.earth</span>

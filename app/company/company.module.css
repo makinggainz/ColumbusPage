@@ -762,6 +762,13 @@
 }
 .avatar img {
   object-fit: cover;
+  object-position: center;
+}
+/* David (featured / CEO) — nudge the photo down within the circle so the
+   subject sits lower than dead-centre. Lower object-position Y anchors
+   toward the top of the source, which shifts the visible image downward. */
+.featuredAttribution .avatar img {
+  object-position: center 20%;
 }
 
 .attributionName {
