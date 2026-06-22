@@ -73,6 +73,18 @@ const CSS = `
   }
 }
 
+/* Grid cell — the actual grid item. Wraps the clipped card so the audience
+   notch can be rendered as an UNCLIPPED sibling overlay (see .bp-notch).
+   position:relative makes it the notch's positioning context. */
+.bp-cell {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .bp-cell--wide { grid-column: span 2; }
+}
+
 /* ── Card ──────────────────────────────────────────────────────────────
    Soft per-product surface, 13px corners, overflow:hidden so the
    bottom-right visual clips at the card edge. Flex column so the text rail
@@ -80,6 +92,7 @@ const CSS = `
    absolutely placed over it. */
 .bp-card {
   position: relative;
+  width: 100%;
   overflow: hidden;
   border-radius: 13px;
   /* Generous top padding on mobile so the brand row sits well below the
@@ -130,7 +143,7 @@ const CSS = `
 /* Wide tile (Research) keeps its video banner + 2-col span. */
 .bp-card--wide { min-height: 280px; }
 @media (min-width: 1024px) {
-  .bp-card--wide { grid-column: span 2; min-height: unset; height: 308px; }
+  .bp-card--wide { min-height: unset; height: 308px; }
 }
 
 /* Research video backdrop (<video class="bp-bg">) + optional tint. */
@@ -161,15 +174,25 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
    "curved edges" the tile had before). Same on every breakpoint. */
 .bp-notch {
   position: absolute;
-  top: 0;
-  right: 0;
+  /* Rendered OUTSIDE the card (sibling overlay on the unclipped .bp-cell), so
+     its white can bleed 1px PAST the card's top + right edges and fully cover
+     the card's rounded corner — the one thing the card's own clip can't do
+     (the corner is the card's outer edge, so a clipped notch always leaves a
+     ~1px antialiased sliver of the card colour there). The 1px overhang lands
+     on the white page, so it's invisible. The top-right corner is rounded to
+     13px to match the card silhouette (a square corner would now jut out as a
+     bump). Height/padding gain 1px on the bled sides to stay 40px-tall centred.
+     pointer-events:none lets clicks fall through to the card link beneath. */
+  top: -1px;
+  right: -1px;
   z-index: 3;
+  pointer-events: none;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 40px;
-  padding: 0 22px;
+  height: 41px;
+  padding: 1px 23px 0 22px;
   background-color: #FFFFFF;
   border-radius: 0 13px 0 13px;
   border-left: 1px solid #E7E7F1;
@@ -189,15 +212,21 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
     #FFFFFF 13.5px
   );
 }
-.bp-notch::before { top: 0; left: -13px; }
-.bp-notch::after  { bottom: -13px; right: 0; }
+/* Fillets re-anchored to the card edges to cancel the 1px notch bleed. */
+.bp-notch::before { top: 1px; left: -13px; }
+.bp-notch::after  { bottom: -13px; right: 1px; }
 
 /* Mobile: tuck the cut-out into the top-LEFT corner instead — a horizontal
    mirror of the desktop top-right placement, fillets included. */
 @media (max-width: 1023px) {
   .bp-notch {
+    /* Mirror of desktop: bleed 1px past the top + LEFT card edges; the top-left
+       corner is rounded 13px to match the card silhouette, the interior
+       bottom-right stays rounded 13px. Left padding gains the 1px back so the
+       label stays centred. */
     right: auto;
-    left: 0;
+    left: -1px;
+    padding: 1px 22px 0 23px;
     border-radius: 13px 0 13px 0;
     border-left: none;
     border-right: 1px solid #E7E7F1;
@@ -213,7 +242,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
     );
   }
   .bp-notch::before { left: auto; right: -13px; }
-  .bp-notch::after  { right: auto; left: 0; }
+  .bp-notch::after  { right: auto; left: 1px; }
 }
 
 /* Label colour keyed to each tile's surface so it reads as part of it:
@@ -227,9 +256,9 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   text-transform: uppercase;
   white-space: nowrap;
 }
-.bp-card--columbus .bp-notch-label { color: #0F173C; }
-.bp-card--elio .bp-notch-label { color: #1E6BAE; }
-.bp-card--research .bp-notch-label { color: #4B7BC7; }
+.bp-notch--columbus .bp-notch-label { color: #0F173C; }
+.bp-notch--elio .bp-notch-label { color: #1E6BAE; }
+.bp-notch--research .bp-notch-label { color: #4B7BC7; }
 
 /* ── Text rail ─────────────────────────────────────────────────────────
    Brand row + a bottom group (tagline + CTA). On Columbus/Elio the rail
@@ -270,14 +299,21 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   gap: 11px;
 }
 .bp-logo {
-  width: clamp(34px, 8vw, 40px);
-  height: clamp(34px, 8vw, 40px);
   object-fit: contain;
   flex: 0 0 auto;
 }
+/* Each logo is sized so its visible mark height equals the brand band (22px mobile
+   / 39px desktop) — the same height as the wordmark glyphs — derived from the PNG's
+   measured ink fraction while keeping the image's native aspect ratio. So the mark
+   sits flush between the guide lines, matched to the name beside it.
+   ink-V-frac: Columbus 0.7555, Research 0.7431, Elio-mark 0.9333 (aspect 1.209). */
+.bp-card--columbus .bp-logo { width: 29.18px; height: 29.12px; }
+.bp-card--research .bp-logo  { width: 29.61px; height: 29.61px; }
+.bp-card--elio .bp-logo      { width: 28.50px; height: 23.57px; }
 @media (min-width: 1024px) {
-  .bp-logo { width: 44px; height: 44px; }
-  .bp-card--wide .bp-logo { width: 50px; height: 50px; }
+  .bp-card--columbus .bp-logo { width: 51.72px; height: 51.62px; }
+  .bp-card--research .bp-logo  { width: 52.48px; height: 52.48px; }
+  .bp-card--elio .bp-logo      { width: 50.53px; height: 41.79px; }
 }
 
 /* Brand name — sized just above the design-system h4 on the standard tiles
@@ -293,25 +329,69 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   font-size: var(--typography--h2);
   line-height: var(--typography--h2--line-height);
 }
-.bp-card--research .bp-name { font-family: var(--font-display); color: #0F173C; }
+.bp-card--research .bp-name {
+  font-family: var(--font-display);
+  color: #0F173C;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  /* Ink glyph height = 22px (mobile — sized so the longest name fits a phone);
+     desktop override → 39px. */
+  font-size: 30.99px;
+  transform: translateY(-0.03em);
+}
 /* Axiforma sits optically high next to the globe mark — nudge it down so the
-   wordmark reads vertically centred with the logo. */
-.bp-card--columbus .bp-name { color: #FFFFFF; font-weight: 600; transform: translateY(2px); }
+   wordmark reads vertically centred with the logo. Sized to match the Research
+   label (design-system h2). */
+.bp-card--columbus .bp-name {
+  color: #FFFFFF;
+  font-weight: 600;
+  white-space: nowrap;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  /* Ink glyph height = 22px (mobile — sized so "Columbus Pro" fits a phone);
+     desktop override → 39px. */
+  font-size: 28.42px;
+  transform: translateY(0.103em); /* centre glyph vertically with the logo */
+}
 
-/* Elio wordmark image — rendered white over the photo (soft drop-shadow for
-   legibility), sized so its glyphs read at roughly the Columbus name's cap
-   height. */
+/* Desktop: bump both wordmarks so their ink glyph height = 39px. */
+@media (min-width: 1024px) {
+  .bp-card--columbus .bp-name { font-size: 50.39px; }
+  .bp-card--research .bp-name { font-size: 54.93px; }
+}
+
+/* Elio wordmark — the "Elio" glyphs occupy only the middle ~50% of the PNG
+   (transparent padding around them), so the image is scaled up and the wrapper
+   crops to the glyph's exact bounds. Result: the visible "Elio" ink height
+   matches the 22px / 39px of the other two labels, and the wrapper box (where
+   the guide lines sit) hugs the glyph. width:auto keeps the native aspect ratio —
+   only height is set, so the image is never stretched. */
 .bp-elio-name {
+  display: block;
+  /* width:auto + max-width:none so the glyph keeps its native aspect ratio.
+     (Tailwind Preflight sets img max-width:100%, which would otherwise clamp the
+     width to the narrow wrapper, squashing the image vertically + clipping it.) */
   width: auto;
-  height: clamp(41px, 11vw, 42px);
-  object-fit: contain;
-  flex: 0 0 auto;
-  margin-left: -4px;
-  transform: translateY(1px);
+  max-width: none;
+  /* Mobile: image 43.36px tall → "Elio" ink glyph = 22px. */
+  height: 43.36px;
+  margin-top: -10.42px;  /* crop the top transparent padding */
+  margin-left: -4.46px;  /* crop the left transparent padding */
   filter: brightness(0) invert(1) drop-shadow(0 1px 4px rgba(0, 30, 60, 0.4));
 }
+.bp-elio-name-wrap {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  overflow: hidden;
+  height: 22px;
+  width: 55.05px;
+}
 @media (min-width: 1024px) {
-  .bp-elio-name { height: 41px; }
+  .bp-elio-name { height: 76.87px; margin-top: -18.46px; margin-left: -7.91px; }
+  .bp-elio-name-wrap { height: 39px; width: 97.6px; }
 }
 
 /* ── Tagline — just above the design-system h5 on the standard tiles. ── */
@@ -378,22 +458,53 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-cta, .bp-cta-arrow { transition: none; }
 }
 
-/* Research CTA — borderless text link (no pill background). The label + arrow
-   read as one cohesive unit: both navy at rest (arrow inherits the label
-   colour) and both swap to the accent on hover, with a tight gap. */
+/* Research CTA — frosted-glass pill. Keeps the base .bp-cta sizing (padding /
+   p-m font / radius-button-md) so it matches the Columbus + Elio pills above,
+   but swaps the solid surface for the translucent glass treatment used by the
+   Research hero's index buttons: a white veil over a backdrop blur with an
+   inset navy hairline. Navy ink that deepens as the glass brightens on hover. */
 .bp-card--research .bp-cta {
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-  color: var(--color-cta);
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  gap: 7px;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  color: color-mix(in srgb, var(--color-cta) 85%, transparent);
+  transition: color 180ms ease, background 180ms ease;
 }
-.bp-card--research .bp-cta-arrow {
-  color: inherit;
-  transform: translateY(0.5px);
+/* Subtle gradient rim — a 1px border masked to the pill edge with a soft white
+   shine at the top-left fading to a barely-there navy tint at the bottom-right. */
+.bp-card--research .bp-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.12) 42%,
+    color-mix(in srgb, var(--color-cta) 10%, transparent) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: background 180ms ease;
+}
+.bp-card--research .bp-cta:hover,
+.bp-card--research:hover .bp-cta {
+  color: var(--color-cta);
+  background-color: rgba(255, 255, 255, 0.32);
+}
+.bp-card--research .bp-cta:hover::before,
+.bp-card--research:hover .bp-cta::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.18) 42%,
+    color-mix(in srgb, var(--color-cta) 16%, transparent) 100%
+  );
 }
 /* Even vertical rhythm: brand → tagline → link equally spaced. */
 .bp-card--research .bp-text-bottom {
@@ -748,13 +859,15 @@ export function BentoProducts() {
                   style={p.logoFilter ? { filter: p.logoFilter } : undefined}
                 />
                 {p.cellClass === "bp-card--elio" ? (
-                  <Image
-                    src="/ConsumerPgMedia/elioNameHero.png"
-                    alt={p.name}
-                    className="bp-elio-name"
-                    width={260}
-                    height={110}
-                  />
+                  <span className="bp-elio-name-wrap">
+                    <Image
+                      src="/ConsumerPgMedia/elioNameHero.png"
+                      alt={p.name}
+                      className="bp-elio-name"
+                      width={260}
+                      height={110}
+                    />
+                  </span>
                 ) : (
                   <span
                     className="bp-name"
@@ -780,9 +893,13 @@ export function BentoProducts() {
                 </span>
               </span>
             );
+            const notchVariant = p.cellClass.replace("bp-card--", "bp-notch--");
             return (
-            <a
+            <div
               key={p.name}
+              className={`bp-cell${p.wide ? " bp-cell--wide" : ""}`}
+            >
+            <a
               href={p.href}
               className={`bp-card ${p.cellClass}${p.wide ? " bp-card--wide" : ""}`}
             >
@@ -828,13 +945,6 @@ export function BentoProducts() {
                 </>
               )}
 
-              {/* Audience cut-out — white notch in the top-right corner. */}
-              {p.audience && (
-                <div className="bp-notch">
-                  <span className="bp-notch-label">{p.audience}</span>
-                </div>
-              )}
-
               {/* Text rail: brand top, tagline + CTA bottom. */}
               <div className="bp-text">
                 {brand}
@@ -873,6 +983,17 @@ export function BentoProducts() {
                 </div>
               )}
             </a>
+
+            {/* Audience cut-out — rendered OUTSIDE the clipped card as an
+                unclipped overlay so its white can bleed over the card's rounded
+                corner (the card's own clip can't, leaving a colour sliver).
+                pointer-events:none so clicks fall through to the card link. */}
+            {p.audience && (
+              <div className={`bp-notch ${notchVariant}`} aria-hidden>
+                <span className="bp-notch-label">{p.audience}</span>
+              </div>
+            )}
+            </div>
             );
           })}
         </div>

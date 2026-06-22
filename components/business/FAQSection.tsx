@@ -69,6 +69,7 @@ export default function FAQSection() {
 
   return (
     <section
+      data-faq-section
       className="relative w-full py-24 lg:py-32"
       style={{ backgroundColor: "var(--ent-bg-white)" }}
     >
@@ -153,9 +154,13 @@ export default function FAQSection() {
                 >
                   <div className="overflow-hidden">
                     <p
-                      className="px-6 md:px-10 pb-7 md:pb-8 text-[14px] md:text-[15px] leading-[1.6] max-w-170"
+                      className="px-6 md:px-10 pb-7 md:pb-8 text-[15px] md:text-[16px] leading-[1.6] max-w-170"
                       style={{
-                        color: "var(--ent-text-secondary)",
+                        // Deep slate — confidently dark for primary reading
+                        // content, but a hair softer than the heading ink
+                        // (--ent-text-primary #0B1B2B) so the bold question
+                        // still leads the row's hierarchy.
+                        color: "#2E3D4C",
                         letterSpacing: "-0.005em",
                       }}
                     >

@@ -23,21 +23,36 @@ const useIsoLayoutEffect =
  * further — so a component that has its OWN dedicated layout below a breakpoint
  * (e.g. a mobile stack) can take over there rather than being miniaturised into
  * illegibility. Leave undefined to scale all the way down (original behavior).
+ *
+ * Optional `stackDesignWidth` (+ `stackFloorWidth`): a SECOND design width used
+ * once the available width drops below `minScaleWidth`. Instead of passing
+ * through, the wrapper renders the child at `stackDesignWidth` and uniformly
+ * scales it (UP to fill wider viewports, or down) to the available width — for a
+ * layout that reflows to a narrow single-column design below the breakpoint and
+ * wants that design rigidly scaled (proportions locked) rather than left to
+ * stretch/cramp fluidly. `stackFloorWidth` sets the lower bound: below it the
+ * wrapper passes through again (scale 1) so the child's native small layout
+ * governs on phones rather than being scaled. Requires `minScaleWidth`.
  */
 export function ScaleToFit({
   designWidth,
   minScaleWidth,
+  stackDesignWidth,
+  stackFloorWidth,
   className,
   children,
 }: {
   designWidth: number;
   minScaleWidth?: number;
+  stackDesignWidth?: number;
+  stackFloorWidth?: number;
   className?: string;
   children: ReactNode;
 }) {
   const outerRef = useRef<HTMLDivElement | null>(null);
   const innerRef = useRef<HTMLDivElement | null>(null);
   const [scale, setScale] = useState(1);
+  const [boxWidth, setBoxWidth] = useState<number | undefined>(undefined);
   const [height, setHeight] = useState<number | undefined>(undefined);
 
   useIsoLayoutEffect(() => {
@@ -47,21 +62,39 @@ export function ScaleToFit({
 
     const measure = () => {
       const avail = outer.clientWidth;
+      const passthrough = () => {
+        setScale(1);
+        setBoxWidth(undefined);
+        setHeight(undefined);
+      };
+      // transform: scale() doesn't change the element's layout box, so the
+      // wrapper must reserve the scaled height to keep page flow correct.
+      const scaleTo = (next: number, box: number) => {
+        setScale(next);
+        setBoxWidth(box);
+        setHeight(inner.offsetHeight * next);
+      };
+
       if (avail >= designWidth) {
         // Enough room — render at full size (desktop behavior, untouched).
-        setScale(1);
-        setHeight(undefined);
+        passthrough();
       } else if (minScaleWidth != null && avail < minScaleWidth) {
-        // Below the floor — stop shrinking and pass through so the child's own
-        // smaller-screen layout (e.g. a mobile stack) governs instead.
-        setScale(1);
-        setHeight(undefined);
+        // Below the 2-col floor.
+        if (
+          stackDesignWidth != null &&
+          (stackFloorWidth == null || avail >= stackFloorWidth)
+        ) {
+          // Stacked design: render at stackDesignWidth and scale it (up to fill
+          // wider viewports, or down) so the single-column layout keeps locked
+          // proportions instead of stretching/cramping fluidly.
+          scaleTo(avail / stackDesignWidth, stackDesignWidth);
+        } else {
+          // Below the stack floor — pass through so the child's native small
+          // layout (e.g. the phone stack) governs instead of being scaled.
+          passthrough();
+        }
       } else {
-        const next = avail / designWidth;
-        setScale(next);
-        // transform: scale() doesn't shrink the element's layout box, so the
-        // wrapper must reserve the scaled height to keep page flow correct.
-        setHeight(inner.offsetHeight * next);
+        scaleTo(avail / designWidth, designWidth);
       }
     };
 
@@ -70,17 +103,17 @@ export function ScaleToFit({
     ro.observe(inner); // catches content/font-load reflow of the inner box
     measure();
     return () => ro.disconnect();
-  }, [designWidth, minScaleWidth]);
+  }, [designWidth, minScaleWidth, stackDesignWidth, stackFloorWidth]);
 
-  const scaling = scale < 1;
+  const transformed = boxWidth != null;
 
-  const outerStyle: CSSProperties | undefined = scaling
+  const outerStyle: CSSProperties | undefined = transformed
     ? { height, overflow: "hidden" }
     : undefined;
 
-  const innerStyle: CSSProperties | undefined = scaling
+  const innerStyle: CSSProperties | undefined = transformed
     ? {
-        width: designWidth,
+        width: boxWidth,
         transform: `scale(${scale})`,
         transformOrigin: "top left",
       }

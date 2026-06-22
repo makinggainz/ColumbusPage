@@ -114,12 +114,17 @@ export default function BusinessFeatureIndex() {
     setActiveIdx(nextActive);
 
     // Visibility — first ITEM (#chat) entered probe line + still inside
-    // the sticky-zone.
+    // the sticky-zone + the FAQ ("Commonly asked questions") section has not
+    // yet appeared on screen. The moment the FAQ's top edge crosses into the
+    // viewport (top <= viewport height) the index hides, even though the
+    // sticky-zone's bottom may not have reached the top of the viewport yet.
     const firstEl = document.getElementById(ITEMS[0].id);
     const zone = document.querySelector<HTMLElement>("[data-industry-sticky-zone]");
+    const faq = document.querySelector<HTMLElement>("[data-faq-section]");
     const firstEntered = firstEl ? firstEl.getBoundingClientRect().top <= probeY : false;
     const stillInZone = zone ? zone.getBoundingClientRect().bottom > 0 : false;
-    setVisible(firstEntered && stillInZone);
+    const faqOnScreen = faq ? faq.getBoundingClientRect().top <= window.innerHeight : false;
+    setVisible(firstEntered && stillInZone && !faqOnScreen);
   }, []);
 
   useEffect(() => {
