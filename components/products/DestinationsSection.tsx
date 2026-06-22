@@ -411,10 +411,25 @@ export default function DestinationsSection() {
               it DOWN to fit any width from ~1024px up — so it miniaturises as
               one rigid unit instead of reflowing/cramping (same mechanism as
               the business hero product demo). minScaleWidth 984 (= the 1024px
-              breakpoint minus the 40px gutter) makes it pass through below
-              1024px so the dedicated mobile stacked layout (<=1023px) takes
-              over unchanged; >=1287px is a passthrough so desktop is untouched. */}
-          <ScaleToFit designWidth={1287} minScaleWidth={984} className="eib-bento-scale">
+              breakpoint minus the 40px gutter) is the 2-col floor.
+
+              Below it (viewport ~500–1023px) the bento reflows to its
+              single-column stack (the <=1023px CSS). Rather than let that stack
+              STRETCH across that whole range (it's tuned for ~phone width and
+              looks bad blown up to ~1000px), we hand ScaleToFit a stackDesignWidth
+              so it renders the single column at that fixed width and rigidly
+              scales it UP to fill — locked proportions, same as the 2-col does.
+              stackFloorWidth 600 (== stackDesignWidth, ~viewport 640) lets the
+              native phone stack take over unscaled below that: the handoff is
+              seamless (scale ≈ 1 there) and it coincides with the <=640px CSS
+              tweaks so they don't toggle mid-scale. */}
+          <ScaleToFit
+            designWidth={1287}
+            minScaleWidth={984}
+            stackDesignWidth={600}
+            stackFloorWidth={600}
+            className="eib-bento-scale"
+          >
           <div className="eib-bento">
             {/* LEFT column — phone mockup with the Search UI inside, +
                 a Free-forever tile under it. */}
@@ -1929,6 +1944,16 @@ export default function DestinationsSection() {
             justify-content: flex-start;
             padding: 28px 24px 20px 24px;
           }
+        }
+        /* Friends ("Plan a trip together") title — at the wider single-column
+           widths (viewport 585px and up, where the bento is the scaled stack)
+           the 164px cap wraps the title into 5–6 lines that run DOWN under the
+           phone screenshot pinned to the card bottom. Let it extend rightward
+           (it still clears the avatars + "3 places added" cluster, which sit in
+           the right ~165px of the card) so it wraps to ~2 lines and stays above
+           the phone. Left narrow below 585px, where that cluster would collide. */
+        @media (min-width: 585px) and (max-width: 1023px) {
+          .eib-card--chat .eib-title-row { max-width: 270px; }
         }
         /* Mobile — same single-column stack, smaller padding + titles
            and tightened gaps so the bento doesn't dominate a short phone

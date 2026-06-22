@@ -245,8 +245,11 @@ function ContactFaq({ items }: { items: { q: string; a: React.ReactNode }[] }) {
             >
               <div className="overflow-hidden">
                 <p
-                  className="px-6 md:px-10 pb-7 md:pb-8 text-[14px] md:text-[15px] leading-[1.6]"
-                  style={{ color: MUTED, letterSpacing: "-0.005em" }}
+                  className="px-6 md:px-10 pb-7 md:pb-8 text-[15px] md:text-[16px] leading-[1.6]"
+                  /* Deep slate + body size — matches the business page FAQ
+                     (FAQSection.tsx): darker than MUTED #5A6B7B for primary
+                     reading content, at the system body size (16px desktop). */
+                  style={{ color: "#2E3D4C", letterSpacing: "-0.005em" }}
                 >
                   {item.a}
                 </p>
