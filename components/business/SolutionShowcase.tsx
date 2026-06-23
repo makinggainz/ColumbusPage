@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { GridSection } from "../home/ContentGrid";
 import { useMediaWarm } from "@/components/ui/MediaPrefetcher";
 // Static imports → AVIF + blur-up for the heavy decorative line-art.
-import b3Left from "@/public/businessB3/left.png";
-import b3Right from "@/public/businessB3/right.png";
+import b3Left from "@/public/BusinessPgMedia/left.png";
+import b3Right from "@/public/BusinessPgMedia/right.png";
 
 export default function SolutionShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
