@@ -94,7 +94,7 @@ type IndustryContent = {
 
 const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
   "residential-real-estate": {
-    breadcrumb: ["Mechlen County Property", "600,000 sqft Residential"],
+    breadcrumb: ["Valencia Province Sites", "Mid-Rise · 8,000–20,000 sqm"],
     sharedWith: [
       { initials: "NH", from: "#3A6FB3", to: "#1F4A85" },
       { initials: "DR", from: "#C75A32", to: "#8A2E18" },
