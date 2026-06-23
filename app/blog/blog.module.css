@@ -143,10 +143,12 @@
   background: transparent;
 }
 
-/* Date eyebrow above the article title — on-brand blue, kept subtle so
-   it doesn't compete with the headline. */
+/* Date eyebrow above the article title — design-system muted slate
+   (--color-muted), kept subtle so it doesn't compete with the headline.
+   The old rgba(16,17,68,.7) blended over white into a slate-purple cast,
+   which violates the site's no-purple rule. */
 .dateLine {
-  color: rgba(16, 17, 68, 0.7);
+  color: var(--color-muted);
 }
 
 :global(body.bg-mode-dark) .dateLine {
