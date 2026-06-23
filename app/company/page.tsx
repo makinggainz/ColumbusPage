@@ -402,6 +402,7 @@ export default function CompanyPage() {
               <div className={styles.founderPhotoMedia}>
                 <WarmImage
                   src={groupFounders}
+                  alt="Columbus Earth co-founders David Ramirez Blonski, Alexander Ramirez Blonski, and Erick Lara"
                   sizes="(min-width: 768px) 640px, 100vw"
                 />
               </div>

@@ -117,8 +117,9 @@
     opacity          200ms ease;
 }
 
+/* Match the site CTA hover (MistxNav): the navy fill stays put and only
+   the label shifts to the accent colour. */
 .pillBtn:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--color-cta) 80%, var(--color-accent));
   color: var(--color-accent);
 }
 
@@ -308,7 +309,6 @@
 }
 
 .compactBtn:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--color-cta) 80%, var(--color-accent));
   color: var(--color-accent);
 }
 

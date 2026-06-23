@@ -107,26 +107,56 @@ export default function RootLayout({
                 "@type": "Organization",
                 "@id": "https://columbus.earth/#organization",
                 name: "Columbus Earth",
+                legalName: "Columbus Earth Corp.",
                 url: "https://columbus.earth",
                 logo: "https://columbus.earth/logobueno.png",
+                email: "contact@columbus.earth",
                 description:
                   "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model.",
-                founders: [
-                  {
-                    "@type": "Person",
-                    name: "David Ramirez Blonski",
-                    jobTitle: "Co-Founder, CEO",
-                  },
-                  {
-                    "@type": "Person",
-                    name: "Alexander Ramirez Blonski",
-                    jobTitle: "Co-Founder, CPO",
-                  },
-                  {
-                    "@type": "Person",
-                    name: "Erick Lara",
-                    jobTitle: "Co-Founder, CTO",
-                  },
+                sameAs: ["https://www.linkedin.com/company/columbusearth/"],
+                // Each founder is a first-class Person entity (own @id +
+                // sameAs to their authoritative profiles) so search engines
+                // can disambiguate and corroborate all three equally — not
+                // just the two who share the "Ramirez Blonski" surname.
+                founder: [
+                  { "@id": "https://columbus.earth/#david-ramirez-blonski" },
+                  { "@id": "https://columbus.earth/#alexander-ramirez-blonski" },
+                  { "@id": "https://columbus.earth/#erick-lara" },
+                ],
+              },
+              {
+                "@type": "Person",
+                "@id": "https://columbus.earth/#david-ramirez-blonski",
+                name: "David Ramirez Blonski",
+                jobTitle: "Co-Founder, CEO",
+                worksFor: { "@id": "https://columbus.earth/#organization" },
+                sameAs: [
+                  "https://www.linkedin.com/in/davidramirezblonski/",
+                  "https://www.gdsteel.co",
+                ],
+              },
+              {
+                "@type": "Person",
+                "@id": "https://columbus.earth/#alexander-ramirez-blonski",
+                name: "Alexander Ramirez Blonski",
+                jobTitle: "Co-Founder, CPO",
+                worksFor: { "@id": "https://columbus.earth/#organization" },
+                sameAs: [
+                  "https://www.linkedin.com/in/alexander-ramirez-blonski-a96121150",
+                  "https://instagram.com/alexrb.1",
+                ],
+              },
+              {
+                "@type": "Person",
+                "@id": "https://columbus.earth/#erick-lara",
+                name: "Erick Lara",
+                // Authoritative profile name — reconciles the short site
+                // name with his LinkedIn identity so Google links them.
+                alternateName: "Erick Mollinedo Lara",
+                jobTitle: "Co-Founder, CTO",
+                worksFor: { "@id": "https://columbus.earth/#organization" },
+                sameAs: [
+                  "https://www.linkedin.com/in/erick-mollinedo-lara-889587224/",
                 ],
               },
               {
