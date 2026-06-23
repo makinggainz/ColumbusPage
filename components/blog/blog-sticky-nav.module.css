@@ -28,7 +28,10 @@
     width: clamp(220px, calc((100vw - 720px) / 2 - 62px), 460px);
     height: calc(100vh - 60px);
     padding: 28px;
-    background: #FAFAFA;
+    /* Expanded index has no panel fill at rest — just the hairline
+       border — so it reads lightly against the page. The fill fades
+       back in on hover (see .dock:hover below). */
+    background: transparent;
     border: 1px solid #ECECEF;
     border-radius: 14px;
     overflow: hidden;
@@ -43,6 +46,14 @@
       opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
       background 240ms ease,
       border-color 240ms ease;
+  }
+
+  /* Hover brings the panel fill back (transitions via the rule above).
+     Scoped inside the media query so it only applies where the dock
+     shows. Dark/sepia .dock overrides are more specific, so their
+     always-filled panels are unaffected. */
+  .dock:hover {
+    background: #FAFAFA;
   }
 }
 
@@ -69,6 +80,15 @@
   height: 56px !important;
   padding: 0 !important;
   border-radius: 28px !important;
+}
+
+/* The expanded index is transparent, but the collapsed bubble needs a
+   surface so the restore control reads as a button. Light mode only —
+   the dark/sepia reading themes keep their filled .dock, so their
+   bubble inherits a surface already. */
+:global(body:not(.bg-mode-dark):not(.bg-mode-sepia)) .dockMinimized {
+  background: #FAFAFA;
+  border-color: #ECECEF;
 }
 
 /* Content wrapper inside the panel. Holds the logo, back link, and
@@ -282,9 +302,9 @@
   height: 16px;
   border-radius: 9999px;
   border: 1px solid #C4C4C7;
-  /* Matches the panel background so the guide rail visually breaks at
-     each circle (the rail behind the circle is occluded). */
-  background: #FAFAFA;
+  /* Matches the page behind the (now transparent) index so the guide
+     rail visually breaks at each circle (the rail behind it is occluded). */
+  background: #FFFFFF;
   color: #FFFFFF;
   display: inline-flex;
   align-items: center;

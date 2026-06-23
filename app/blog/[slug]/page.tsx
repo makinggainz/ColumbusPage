@@ -105,40 +105,6 @@ export default async function BlogPostPage({ params }: Props) {
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
           )}
-          {/* Columbus brand lockup — same top-left mark used on the
-              /blog index cards, applied to the article hero image too. */}
-          {post.image && (
-            <div
-              style={{
-                position: "absolute",
-                top: 16,
-                left: 16,
-                zIndex: 2,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                pointerEvents: "none",
-              }}
-            >
-              <span style={{ width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logobueno.png" alt="" width={20} height={20} style={{ objectFit: "contain", filter: "brightness(0) invert(1)" }} />
-              </span>
-              <span
-                style={{
-                  fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif",
-                  fontSize: 14,
-                  fontWeight: 605,
-                  color: "#FFFFFF",
-                  letterSpacing: "-0.01em",
-                  lineHeight: 1,
-                  textShadow: "0 1px 3px rgba(0, 0, 0, 0.45)",
-                }}
-              >
-                Columbus
-              </span>
-            </div>
-          )}
         </div>
 
         <div>
