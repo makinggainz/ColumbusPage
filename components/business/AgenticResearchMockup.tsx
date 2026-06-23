@@ -120,7 +120,7 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     reportBody:
       "Across Valencia province, the development sites best matching the 8,000–20,000 m² mid-rise envelope concentrate along the western metro corridor — Quart de Poblet, Paterna, Alboraya, and Mislata each clear the suitability threshold on zoning convertibility, sub-30-minute access to the city center, and positive demographic trajectory. These municipalities pair residential or readily convertible parcels with net in-migration running ahead of the current mid-rise pipeline.",
     mapLabel: "Valencia Province · Site Suitability",
-    mapImage: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/Research.png",
+    mapImage: "/BusinessPgMedia/CREUseCases/MapVisuals/Research.png",
     mapBackground:
       "radial-gradient(circle at 52% 60%, #b32a1c 0%, #d35a30 18%, #e88a3a 38%, #f4b465 58%, #fce0a7 80%, #f8efdb 100%)",
     aiSuggestion:
@@ -153,7 +153,7 @@ const CONTENT: Partial<Record<IndustryId, IndustryContent>> = {
     reportBody:
       "Lyon's Presqu'île and Bordeaux's Rue Sainte-Catherine corridor lead a shortlist of 47 evaluated French metros for flagship-format expansion. The recommended 36-month sequence prioritizes catchment purchasing power and tourism-driven footfall outside the Paris ring, with secondary anchors in Marseille's Vieux-Port and Lille's Rue Faidherbe — both showing forward demographic momentum and a thin competitor flagship density.",
     mapLabel: "France · Flagship Suitability Score",
-    mapImage: "/BusinessPgMedia/CREUseCases/MapVisuals/Research.png",
+    mapImage: "/BusinessPgMedia/ResidentialRealEstateUseCases/MapVisuals/Research.png",
     mapBackground:
       "radial-gradient(ellipse 65% 55% at 35% 50%, #4a76c8 0%, #6892d4 30%, #a3c1e8 55%, #d6e6f4 85%, #eef4fa 100%)",
     aiSuggestion:
