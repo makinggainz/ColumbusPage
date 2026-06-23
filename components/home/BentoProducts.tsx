@@ -96,7 +96,8 @@ const CSS = `
   overflow: hidden;
   border-radius: 13px;
   /* Generous top padding on mobile so the brand row sits well below the
-     top-LEFT cut-out (40px tall) with clear breathing room. */
+     top-LEFT cut-out (40px tall) with clear breathing room. (Mobile padding-top
+     is finally set in the ≤1023px block below.) */
   padding: 58px 26px 28px;
   text-decoration: none;
   color: #0F173C;
@@ -245,6 +246,43 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-notch::after  { right: auto; left: 1px; }
 }
 
+/* Narrow two-column desktop (1024–1129px): the half-width Columbus / Elio tiles
+   get tight enough that the left-aligned brand name runs under the right-side
+   cut-out. Rather than squeeze, mirror those two cut-outs to the top-LEFT (same
+   as the mobile placement) so the name has the full tile width to its right —
+   then drop the brand below the now-left notch. Research is a full-width banner,
+   so it keeps its right-side notch and needs no drop. */
+@media (min-width: 1024px) and (max-width: 1129px) {
+  .bp-notch--columbus,
+  .bp-notch--elio {
+    right: auto;
+    left: -1px;
+    padding: 1px 22px 0 23px;
+    border-radius: 13px 0 13px 0;
+    border-left: none;
+    border-right: 1px solid #E7E7F1;
+  }
+  .bp-notch--columbus::before,
+  .bp-notch--columbus::after,
+  .bp-notch--elio::before,
+  .bp-notch--elio::after {
+    background: radial-gradient(
+      circle at right bottom,
+      rgba(255, 255, 255, 0) 11.5px,
+      #E7E7F1 12.25px,
+      #E7E7F1 12.75px,
+      #FFFFFF 13.5px
+    );
+  }
+  .bp-notch--columbus::before,
+  .bp-notch--elio::before { left: auto; right: -13px; }
+  .bp-notch--columbus::after,
+  .bp-notch--elio::after  { right: auto; left: 1px; }
+
+  .bp-card--columbus .bp-brand,
+  .bp-card--elio .bp-brand { margin-top: 26px; }
+}
+
 /* Label colour keyed to each tile's surface so it reads as part of it:
    Columbus = navy ink of the gray tile; Elio = the tile's blue; Research
    = the lighter banner blue. */
@@ -302,18 +340,18 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   object-fit: contain;
   flex: 0 0 auto;
 }
-/* Each logo is sized so its visible mark height equals the brand band (22px mobile
-   / 39px desktop) — the same height as the wordmark glyphs — derived from the PNG's
-   measured ink fraction while keeping the image's native aspect ratio. So the mark
-   sits flush between the guide lines, matched to the name beside it.
+/* Logos run a little larger than the wordmark band so the marks read with more
+   presence — their visible ink height = 24px mobile / 36px desktop (vs the 17/30
+   text band). Mobile leans extra-large since the single-column cards are wide.
+   Sizes derived from each PNG's measured ink fraction, keeping native aspect ratios.
    ink-V-frac: Columbus 0.7555, Research 0.7431, Elio-mark 0.9333 (aspect 1.209). */
-.bp-card--columbus .bp-logo { width: 29.18px; height: 29.12px; }
-.bp-card--research .bp-logo  { width: 29.61px; height: 29.61px; }
-.bp-card--elio .bp-logo      { width: 28.50px; height: 23.57px; }
+.bp-card--columbus .bp-logo { width: 31.83px; height: 31.77px; }
+.bp-card--research .bp-logo  { width: 32.30px; height: 32.30px; }
+.bp-card--elio .bp-logo      { width: 31.09px; height: 25.72px; }
 @media (min-width: 1024px) {
-  .bp-card--columbus .bp-logo { width: 51.72px; height: 51.62px; }
-  .bp-card--research .bp-logo  { width: 52.48px; height: 52.48px; }
-  .bp-card--elio .bp-logo      { width: 50.53px; height: 41.79px; }
+  .bp-card--columbus .bp-logo { width: 47.74px; height: 47.65px; }
+  .bp-card--research .bp-logo  { width: 48.45px; height: 48.45px; }
+  .bp-card--elio .bp-logo      { width: 46.64px; height: 38.57px; }
 }
 
 /* Brand name — sized just above the design-system h4 on the standard tiles
@@ -335,9 +373,9 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   position: relative;
   display: inline-block;
   line-height: 1;
-  /* Ink glyph height = 22px (mobile — sized so the longest name fits a phone);
-     desktop override → 39px. */
-  font-size: 30.99px;
+  /* Ink glyph height = 17px (mobile — sized so the longest name fits a phone);
+     desktop override → 30px. */
+  font-size: 23.94px;
   transform: translateY(-0.03em);
 }
 /* Axiforma sits optically high next to the globe mark — nudge it down so the
@@ -350,22 +388,26 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   position: relative;
   display: inline-block;
   line-height: 1;
-  /* Ink glyph height = 22px (mobile — sized so "Columbus Pro" fits a phone);
-     desktop override → 39px. */
-  font-size: 28.42px;
+  /* Ink glyph height = 17px (mobile — sized so "Columbus Pro" fits a phone);
+     desktop override → 30px. */
+  font-size: 21.96px;
   transform: translateY(0.103em); /* centre glyph vertically with the logo */
+  /* The Columbus globe PNG carries ~12% side padding (vs ~7% on the Elio /
+     Research marks), so at the shared 11px gap its name reads further from the
+     logo. Pull it back so the visual logo→name gap matches the other two. */
+  margin-left: -1.3px;
 }
 
-/* Desktop: bump both wordmarks so their ink glyph height = 39px. */
+/* Desktop: bump both wordmarks so their ink glyph height = 30px. */
 @media (min-width: 1024px) {
-  .bp-card--columbus .bp-name { font-size: 50.39px; }
-  .bp-card--research .bp-name { font-size: 54.93px; }
+  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -2.3px; }
+  .bp-card--research .bp-name { font-size: 42.25px; }
 }
 
 /* Elio wordmark — the "Elio" glyphs occupy only the middle ~50% of the PNG
    (transparent padding around them), so the image is scaled up and the wrapper
    crops to the glyph's exact bounds. Result: the visible "Elio" ink height
-   matches the 22px / 39px of the other two labels, and the wrapper box (where
+   matches the 17px / 30px of the other two labels, and the wrapper box (where
    the guide lines sit) hugs the glyph. width:auto keeps the native aspect ratio —
    only height is set, so the image is never stretched. */
 .bp-elio-name {
@@ -375,10 +417,10 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
      width to the narrow wrapper, squashing the image vertically + clipping it.) */
   width: auto;
   max-width: none;
-  /* Mobile: image 43.36px tall → "Elio" ink glyph = 22px. */
-  height: 43.36px;
-  margin-top: -10.42px;  /* crop the top transparent padding */
-  margin-left: -4.46px;  /* crop the left transparent padding */
+  /* Mobile: image 33.51px tall → "Elio" ink glyph = 17px. */
+  height: 33.51px;
+  margin-top: -8.05px;   /* crop the top transparent padding */
+  margin-left: -3.45px;  /* crop the left transparent padding */
   filter: brightness(0) invert(1) drop-shadow(0 1px 4px rgba(0, 30, 60, 0.4));
 }
 .bp-elio-name-wrap {
@@ -386,12 +428,12 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   display: inline-block;
   flex: 0 0 auto;
   overflow: hidden;
-  height: 22px;
-  width: 55.05px;
+  height: 17px;
+  width: 42.54px;
 }
 @media (min-width: 1024px) {
-  .bp-elio-name { height: 76.87px; margin-top: -18.46px; margin-left: -7.91px; }
-  .bp-elio-name-wrap { height: 39px; width: 97.6px; }
+  .bp-elio-name { height: 59.13px; margin-top: -14.20px; margin-left: -6.09px; }
+  .bp-elio-name-wrap { height: 30px; width: 75.07px; }
 }
 
 /* ── Tagline — just above the design-system h5 on the standard tiles. ── */
@@ -471,8 +513,10 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   color: color-mix(in srgb, var(--color-cta) 85%, transparent);
   transition: color 180ms ease, background 180ms ease;
 }
-/* Subtle gradient rim — a 1px border masked to the pill edge with a soft white
-   shine at the top-left fading to a barely-there navy tint at the bottom-right. */
+/* Subtle gradient rim — a 1px border masked to the pill edge. Inverted from the
+   usual glass shine: a navy tint concentrated along the top (and left) edge that
+   fades to a soft white shine toward the bottom. The steeper 152deg angle keeps
+   the dark hugging the top. */
 .bp-card--research .bp-cta::before {
   content: "";
   position: absolute;
@@ -480,10 +524,11 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   border-radius: inherit;
   padding: 1px;
   background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0.12) 42%,
-    color-mix(in srgb, var(--color-cta) 10%, transparent) 100%
+    152deg,
+    color-mix(in srgb, var(--color-cta) 26%, transparent) 0%,
+    color-mix(in srgb, var(--color-cta) 10%, transparent) 34%,
+    rgba(255, 255, 255, 0.16) 70%,
+    rgba(255, 255, 255, 0.42) 100%
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -500,10 +545,11 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bp-card--research .bp-cta:hover::before,
 .bp-card--research:hover .bp-cta::before {
   background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.18) 42%,
-    color-mix(in srgb, var(--color-cta) 16%, transparent) 100%
+    152deg,
+    color-mix(in srgb, var(--color-cta) 34%, transparent) 0%,
+    color-mix(in srgb, var(--color-cta) 14%, transparent) 34%,
+    rgba(255, 255, 255, 0.22) 70%,
+    rgba(255, 255, 255, 0.6) 100%
   );
 }
 /* Even vertical rhythm: brand → tagline → link equally spaced. */
@@ -575,7 +621,10 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 3px;
+  /* Concentric with the display opening: the lid's outer radius is 11px top with
+     6px bezel padding (→ 5px inner), and the bottom meets the hinge nearly square
+     (5px outer − 7px padding → 0). So the screenshot's corners hug the screen. */
+  border-radius: 5px 5px 0 0;
   background-color: #FFFFFF;
 }
 .bp-mac-cam {
@@ -691,13 +740,15 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 }
 
 /* ── Mobile: open up the stacked layout so the content breathes ──────────
-   More room below the cut-out, bigger gaps between brand → tagline → CTA, and
-   a larger gap before the product visual. The taller cards are intentional. */
+   More room below the cut-out, and a deliberate brand → tagline → CTA rhythm:
+   the tagline sits close under the title (one content group) while the CTA gets
+   clearer separation below it. A larger gap precedes the product visual. The
+   taller cards are intentional. */
 @media (max-width: 1023px) {
-  .bp-card { padding-top: 66px; padding-bottom: 46px; min-height: 480px; }
+  .bp-card { padding-top: 70px; padding-bottom: 46px; min-height: 480px; }
   .bp-card--wide { min-height: 360px; }
   .bp-text-bottom,
-  .bp-card--research .bp-text-bottom { margin-top: 30px; gap: 26px; }
+  .bp-card--research .bp-text-bottom { margin-top: 16px; gap: 22px; }
   .bp-visual { margin-top: 50px; }
 }
 `;
