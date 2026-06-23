@@ -20,6 +20,9 @@
 # playwright mcp artifacts
 .playwright-mcp/
 
+# claude design-extract skill output (scratch artifacts)
+design-extract-output/
+
 # local dev screenshots / audit images
 *.png
 *.jpg
