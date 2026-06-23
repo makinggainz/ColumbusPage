@@ -155,6 +155,23 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
         className="absolute inset-0 pointer-events-none"
         style={{ zIndex: 1, background: "#000000", opacity: 0.25 }}
       />
+      {/* Bottom-right corner vignette — masks the "KlingAI 3.0" watermark baked
+          into the source clip's bottom-right corner. The mark only surfaces when
+          the footer is tall enough to reveal the source's bottom edge (mobile +
+          the tablet band); at lg+ the short footer crops it out vertically, so
+          this is `lg:hidden`. A soft radial fade reads as an intentional
+          cinematic vignette and sinks the white wordmark into the dark sea.
+          Sits above the video + scrim (z:2) but below the legal text (z:10), so
+          the "www.columbus.earth" row stays legible on top. */}
+      <div
+        aria-hidden
+        className="absolute bottom-0 right-0 w-[340px] h-[150px] pointer-events-none lg:hidden"
+        style={{
+          zIndex: 2,
+          background:
+            "radial-gradient(120% 135% at 100% 100%, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.95) 28%, rgba(0,0,0,0.78) 44%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 80%)",
+        }}
+      />
       {/* Reveal-mode white cover — opaque (opacity:1, z:30) while the
           user is scrolling above the reveal range, so the entire footer
           (video + scrim + content) reads as a flat white sheet that
@@ -197,20 +214,20 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
             On mobile the wrapper renders as a 3-col grid so all three
             link cols fit side-by-side instead of stacking — keeps content
             compact enough to fit within the reveal range on small phones. */}
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 md:items-start mb-10 text-center md:text-left">
+        <div className="flex flex-col lg:grid lg:grid-cols-4 gap-10 lg:gap-12 lg:items-start mb-10 text-center md:text-left">
           {/* Brand block — Columbus Earth + tagline are visually the
               priority on mobile: text-[36px] heading vs the desktop 24px,
               wider tagline (text-[16px]), and centered alignment so the
               eye lands here first. Desktop reverts to the original
               sizes/left-alignment. */}
-          <div>
+          <div className="md:border-b md:border-white/15 md:pb-8 lg:border-b-0 lg:pb-0">
             <h3
-              className="text-[36px] md:text-[24px] font-semibold mb-4 md:mb-3 text-white"
+              className="text-[36px] md:text-[52px] lg:text-[24px] font-semibold mb-4 md:mb-3 text-white"
               style={{ fontFamily: "Axiforma, 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif", letterSpacing: "-0.02em" }}
             >
               Columbus Earth
             </h3>
-            <p className="text-[16px] md:text-[14px] leading-relaxed mb-6 md:mb-4 max-w-[320px] md:max-w-[260px] mx-auto md:mx-0 text-white/80 md:text-white/70">
+            <p className="text-[16px] lg:text-[14px] leading-relaxed mb-6 md:mb-4 max-w-[320px] md:max-w-[440px] lg:max-w-[260px] mx-auto md:mx-0 text-white/80 md:text-white/70">
               The applied AI lab building the first production Large Geospatial Model.
             </p>
             <div className="flex justify-center md:justify-start gap-5 md:gap-4">
@@ -225,7 +242,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               the Company sub-wrapper both carry `md:contents` so they
               vanish from layout at md+, restoring the Brand | Product |
               Technology | Company row of the outer grid at lg+. */}
-          <div className="grid grid-cols-2 gap-6 w-full md:contents">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-0 md:divide-x md:divide-white/15 md:*:px-7 md:[&>*:first-child]:pl-0 w-full lg:contents">
             <FooterColumn theme={theme} title="Product" links={[
               { label: "Columbus Pro", href: "/products/business" },
               { label: "Elio", href: "/products/consumer" },
@@ -235,7 +252,7 @@ export const Footer: FC<FooterProps> = ({ variant = "default", reveal = false, t
               { label: "Reasoning", href: "/research#reasoning" },
               { label: "Results", href: "/research#results" },
             ]} />
-            <div className="col-span-2 flex justify-center md:contents">
+            <div className="col-span-2 md:col-span-1 flex justify-center md:justify-start lg:contents">
               <FooterColumn theme={theme} title="Company" links={[
                 { label: "Our Mission", href: "/company" },
                 { label: "Contact", href: "/contact" },
@@ -271,7 +288,7 @@ const FooterColumn = ({
    *  text — footer copy is locked to white over the video background. */
   theme?: "light" | "dark" | "light-blue";
 }) => (
-  <div className="md:justify-self-end">
+  <div className="lg:justify-self-end">
     <p className="mb-3 md:mb-4 font-medium text-[16px] md:text-[17.5px] tracking-wide text-white">
       {title}
     </p>

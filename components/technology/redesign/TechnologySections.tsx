@@ -541,10 +541,10 @@ export function TechnologySections() {
                 `${(4 + ((y - 2022) / 7) * 92).toFixed(2)}%`;
               const yearMid = (y: number) => yearAt(y + 0.5);
 
-              // 2025 + 2026 sit only one year apart — shift 2025 left and
-              // 2026 right so their labels have breathing room.
+              // 2025 sits close to the Columbus "now" marker — shift it left
+              // so its labels have breathing room.
               const x2025 = `calc(${yearMid(2025)} - clamp(140px, 16vw, 220px))`;
-              const x2026 = `calc(${yearMid(2026)} + clamp(40px, 5vw, 80px))`;
+              const x2027 = yearMid(2027);
 
               // Columbus "now" marker — its own dot/stem/date, sitting
               // between 2025 and 2026 on the TOP side of the track.
@@ -573,7 +573,7 @@ export function TechnologySections() {
                 { year: "2025", label: "Geo-tuned LLM & Vision Models" },
                 { year: nowLabel, label: "Columbus", now: true },
                 {
-                  year: "2026",
+                  year: "2027",
                   label: "Generalist LGM",
                   full: "Generalist LGM (Large Geospatial Model)",
                   cta: { text: "Read our Paper", href: blogHref(BLOG_SLUG.timelineGeneralistLgm) },
@@ -603,7 +603,6 @@ export function TechnologySections() {
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2024) }} aria-hidden />
               {/* Just left of the Columbus "now" logo (tracks the live marker). */}
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: `calc(${yearAt(nowFrac)} - clamp(60px, 7vw, 110px))` }} aria-hidden />
-              <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: yearMid(2027) }} aria-hidden />
               <span className={`${styles.lgmTimelineDot} ${styles.lgmTimelineDotMinor}`} style={{ left: "94%" }} aria-hidden />
 
               {/* ─── 2022 — year above the line (no stem); LLM below ─── */}
@@ -638,13 +637,13 @@ export function TechnologySections() {
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
 
-              {/* ─── 2026 — Generalist LGM label above; year + CTA below ─── */}
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: x2026 }}>
+              {/* ─── 2027 — Generalist LGM label above; year + CTA below ─── */}
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneTop}`} style={{ left: x2027 }}>
                 <span className={styles.lgmTimelineLabel}>Generalist<br />LGM</span>
                 <span className={styles.lgmTimelineStem} aria-hidden />
               </div>
-              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2026 }}>
-                <span className={styles.lgmTimelineYear}>2026</span>
+              <div className={`${styles.lgmTimelineMilestone} ${styles.lgmTimelineMilestoneBottom}`} style={{ left: x2027 }}>
+                <span className={styles.lgmTimelineYear}>2027</span>
                 <Link href={blogHref(BLOG_SLUG.lgmTimeline)} className={styles.lgmTimelineCta}>
                   <span>Read our Paper</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
