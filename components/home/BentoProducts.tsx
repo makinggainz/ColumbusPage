@@ -341,9 +341,9 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 /* Elio's wordmark is an image (its margin only crops within its clip box,
    not the flex gap), so tighten Elio's gap directly on mobile so its
    logo→name spacing scales like the smaller lockup. Desktop keeps 11px. */
-.bp-card--elio .bp-brand { gap: 16.6px; }
+.bp-card--elio .bp-brand { gap: 6.57px; }
 @media (min-width: 700px) {
-  .bp-card--elio .bp-brand { gap: 29.96px; }
+  .bp-card--elio .bp-brand { gap: 12.27px; }
 }
 .bp-logo {
   object-fit: contain;
@@ -387,8 +387,9 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
      desktop override → 30px. */
   font-size: 23.94px;
   transform: translateY(-0.03em);
-  /* TEST variant: gap = 3× the font word-space (mobile 5.80px → 17.40px). */
-  margin-left: 4px;
+  /* TEST variant: gap ≈ 0.4× cap height (mobile 6.8px), matching tight
+     icon→wordmark lockups (OpenAI / Linear). */
+  margin-left: -6.58px;
 }
 /* Axiforma sits optically high next to the globe mark — nudge it down so the
    wordmark reads vertically centred with the logo. Sized to match the Research
@@ -404,15 +405,15 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
      desktop override → 30px. */
   font-size: 21.96px;
   transform: translateY(0.103em); /* centre glyph vertically with the logo */
-  /* TEST variant: gap = 3× the font word-space (mobile 5.42px → 16.27px),
-     measured ink-to-ink so the globe PNG's side padding is accounted for. */
-  margin-left: 1.5px;
+  /* TEST variant: gap ≈ 0.4× cap height (mobile 6.8px), measured ink-to-ink
+     so the globe PNG's side padding is accounted for. */
+  margin-left: -7.95px;
 }
 
 /* Desktop: bump both wordmarks so their ink glyph height = 30px. */
 @media (min-width: 700px) {
-  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: 11.1px; }
-  .bp-card--research .bp-name { font-size: 42.25px; margin-left: 15.5px; }
+  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -5.61px; }
+  .bp-card--research .bp-name { font-size: 42.25px; margin-left: -3.19px; }
 }
 
 /* Elio wordmark — the "Elio" glyphs occupy only the middle ~50% of the PNG
