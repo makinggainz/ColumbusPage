@@ -66,7 +66,9 @@ const CSS = `
   grid-template-columns: 1fr;
   gap: 16px;
 }
-@media (min-width: 700px) {
+/* Two-column grid only on true desktop — at 700–1023px the cards stay
+   stacked (single column) but each keeps the horizontal desktop interior. */
+@media (min-width: 1024px) {
   .bp-grid {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -81,7 +83,7 @@ const CSS = `
   display: flex;
   min-width: 0;
 }
-@media (min-width: 700px) {
+@media (min-width: 1024px) {
   .bp-cell--wide { grid-column: span 2; }
 }
 
@@ -246,13 +248,13 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-notch::after  { right: auto; left: 1px; }
 }
 
-/* Narrow two-column desktop (700–1129px): the half-width Columbus / Elio tiles
+/* Narrow two-column desktop (1024–1129px): the half-width Columbus / Elio tiles
    get tight enough that the left-aligned brand name runs under the right-side
    cut-out. Rather than squeeze, mirror those two cut-outs to the top-LEFT (same
    as the mobile placement) so the name has the full tile width to its right —
    then drop the brand below the now-left notch. Research is a full-width banner,
    so it keeps its right-side notch and needs no drop. */
-@media (min-width: 700px) and (max-width: 1129px) {
+@media (min-width: 1024px) and (max-width: 1129px) {
   .bp-notch--columbus,
   .bp-notch--elio {
     right: auto;
@@ -340,7 +342,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
    not the flex gap), so tighten Elio's gap directly on mobile so its
    logo→name spacing scales like the smaller lockup. Desktop keeps 11px. */
 .bp-card--elio .bp-brand { gap: 7px; }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-card--elio .bp-brand { gap: 11px; }
 }
 .bp-logo {
@@ -357,7 +359,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bp-card--columbus .bp-logo { width: 36.06px; height: 36.00px; }
 .bp-card--research .bp-logo  { width: 36.60px; height: 36.60px; }
 .bp-card--elio .bp-logo      { width: 35.23px; height: 29.14px; }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-card--columbus .bp-logo { width: 63.64px; height: 63.53px; }
   .bp-card--research .bp-logo  { width: 64.59px; height: 64.59px; }
   .bp-card--elio .bp-logo      { width: 62.18px; height: 51.43px; }
@@ -413,7 +415,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 }
 
 /* Desktop: bump both wordmarks so their ink glyph height = 30px. */
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -7px; }
   .bp-card--research .bp-name { font-size: 42.25px; margin-left: -9px; }
 }
@@ -445,7 +447,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   height: 17px;
   width: 42.54px;
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-elio-name { height: 59.13px; margin-top: -14.20px; margin-left: -9.5px; }
   .bp-elio-name-wrap { height: 30px; width: 75.07px; }
 }
@@ -983,7 +985,7 @@ export function BentoProducts() {
                   aria-hidden
                   fill
                   className="bp-elio-bg"
-                  sizes="(max-width: 699px) 100vw, (max-width: 1023px) 50vw, 640px"
+                  sizes="(max-width: 1023px) 100vw, 640px"
                   quality={78}
                   placeholder="blur"
                   loading={warm ? "eager" : "lazy"}
@@ -1000,7 +1002,7 @@ export function BentoProducts() {
                     aria-hidden
                     fill
                     className="bp-columbus-bg"
-                    sizes="(max-width: 699px) 100vw, (max-width: 1023px) 50vw, 640px"
+                    sizes="(max-width: 1023px) 100vw, 640px"
                     quality={70}
                     placeholder="blur"
                     loading={warm ? "eager" : "lazy"}
@@ -1029,7 +1031,7 @@ export function BentoProducts() {
                         src={p.visual}
                         alt=""
                         aria-hidden
-                        sizes="(max-width: 699px) calc(100vw - 84px), (max-width: 1023px) 50vw, 440px"
+                        sizes="(max-width: 1023px) calc(100vw - 84px), 440px"
                         quality={80}
                         placeholder="blur"
                         loading={warm ? "eager" : "lazy"}
