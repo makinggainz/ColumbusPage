@@ -340,18 +340,19 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   object-fit: contain;
   flex: 0 0 auto;
 }
-/* Logos run a little larger than the wordmark band so the marks read with more
-   presence — their visible ink height = 24px mobile / 36px desktop (vs the 17/30
-   text band). Mobile leans extra-large since the single-column cards are wide.
-   Sizes derived from each PNG's measured ink fraction, keeping native aspect ratios.
+/* Logos are sized so each mark's visible ink height matches the 42px CTA-pill
+   height in its cell — the marks read at the same visual scale as the buttons.
+   Box height = 42px / ink-V-frac (the rest of each PNG is transparent padding);
+   width keeps the native aspect ratio. The CTA pill is 42px tall at both
+   breakpoints, so these hold for mobile and desktop alike.
    ink-V-frac: Columbus 0.7555, Research 0.7431, Elio-mark 0.9333 (aspect 1.209). */
-.bp-card--columbus .bp-logo { width: 31.83px; height: 31.77px; }
-.bp-card--research .bp-logo  { width: 32.30px; height: 32.30px; }
-.bp-card--elio .bp-logo      { width: 31.09px; height: 25.72px; }
+.bp-card--columbus .bp-logo { width: 55.69px; height: 55.59px; }
+.bp-card--research .bp-logo  { width: 56.52px; height: 56.52px; }
+.bp-card--elio .bp-logo      { width: 54.41px; height: 45.00px; }
 @media (min-width: 1024px) {
-  .bp-card--columbus .bp-logo { width: 47.74px; height: 47.65px; }
-  .bp-card--research .bp-logo  { width: 48.45px; height: 48.45px; }
-  .bp-card--elio .bp-logo      { width: 46.64px; height: 38.57px; }
+  .bp-card--columbus .bp-logo { width: 55.69px; height: 55.59px; }
+  .bp-card--research .bp-logo  { width: 56.52px; height: 56.52px; }
+  .bp-card--elio .bp-logo      { width: 54.41px; height: 45.00px; }
 }
 
 /* Brand name — sized just above the design-system h4 on the standard tiles
@@ -377,6 +378,8 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
      desktop override → 30px. */
   font-size: 23.94px;
   transform: translateY(-0.03em);
+  /* Pull the wordmark in tight against the (now larger) globe mark. */
+  margin-left: -5px;
 }
 /* Axiforma sits optically high next to the globe mark — nudge it down so the
    wordmark reads vertically centred with the logo. Sized to match the Research
@@ -393,15 +396,15 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   font-size: 21.96px;
   transform: translateY(0.103em); /* centre glyph vertically with the logo */
   /* The Columbus globe PNG carries ~12% side padding (vs ~7% on the Elio /
-     Research marks), so at the shared 11px gap its name reads further from the
-     logo. Pull it back so the visual logo→name gap matches the other two. */
-  margin-left: -1.3px;
+     Research marks). With the larger logos that padding widens the visual
+     logo→name gap, so pull the wordmark in tight against the mark. */
+  margin-left: -4px;
 }
 
 /* Desktop: bump both wordmarks so their ink glyph height = 30px. */
 @media (min-width: 1024px) {
-  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -2.3px; }
-  .bp-card--research .bp-name { font-size: 42.25px; }
+  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -6px; }
+  .bp-card--research .bp-name { font-size: 42.25px; margin-left: -8px; }
 }
 
 /* Elio wordmark — the "Elio" glyphs occupy only the middle ~50% of the PNG
@@ -420,7 +423,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   /* Mobile: image 33.51px tall → "Elio" ink glyph = 17px. */
   height: 33.51px;
   margin-top: -8.05px;   /* crop the top transparent padding */
-  margin-left: -3.45px;  /* crop the left transparent padding */
+  margin-left: -5.5px;   /* crop left padding + a small nudge toward the logo */
   filter: brightness(0) invert(1) drop-shadow(0 1px 4px rgba(0, 30, 60, 0.4));
 }
 .bp-elio-name-wrap {
@@ -432,7 +435,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   width: 42.54px;
 }
 @media (min-width: 1024px) {
-  .bp-elio-name { height: 59.13px; margin-top: -14.20px; margin-left: -6.09px; }
+  .bp-elio-name { height: 59.13px; margin-top: -14.20px; margin-left: -8.5px; }
   .bp-elio-name-wrap { height: 30px; width: 75.07px; }
 }
 
