@@ -48,7 +48,7 @@ const CSS = `
   padding: 0 0 80px;
   font-family: var(--font-sans, "Ppneuemontreal", "PP Neue Montreal", Arial, sans-serif);
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-section { padding-bottom: 112px; }
 }
 
@@ -66,7 +66,7 @@ const CSS = `
   grid-template-columns: 1fr;
   gap: 16px;
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-grid {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -81,7 +81,7 @@ const CSS = `
   display: flex;
   min-width: 0;
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-cell--wide { grid-column: span 2; }
 }
 
@@ -97,7 +97,7 @@ const CSS = `
   border-radius: 13px;
   /* Generous top padding on mobile so the brand row sits well below the
      top-LEFT cut-out (40px tall) with clear breathing room. (Mobile padding-top
-     is finally set in the ≤1023px block below.) */
+     is finally set in the ≤699px block below.) */
   padding: 58px 26px 28px;
   text-decoration: none;
   color: #0F173C;
@@ -106,7 +106,7 @@ const CSS = `
   min-height: 360px;
 }
 @media (min-width: 640px)  { .bp-card { padding: 60px 32px 32px; min-height: 400px; } }
-@media (min-width: 1024px) { .bp-card { padding: 40px; height: 500px; min-height: 0; } }
+@media (min-width: 700px) { .bp-card { padding: 40px; height: 500px; min-height: 0; } }
 
 /* Per-product surfaces — bases behind each tile's blurred hero photo.
    Columbus = the business-page hero photo under a navy-tinted wash (white
@@ -143,7 +143,7 @@ const CSS = `
 
 /* Wide tile (Research) keeps its video banner + 2-col span. */
 .bp-card--wide { min-height: 280px; }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-card--wide { min-height: unset; height: 308px; }
 }
 
@@ -219,7 +219,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 /* Mobile: tuck the cut-out into the top-LEFT corner instead — a horizontal
    mirror of the desktop top-right placement, fillets included. */
-@media (max-width: 1023px) {
+@media (max-width: 699px) {
   .bp-notch {
     /* Mirror of desktop: bleed 1px past the top + LEFT card edges; the top-left
        corner is rounded 13px to match the card silhouette, the interior
@@ -246,13 +246,13 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-notch::after  { right: auto; left: 1px; }
 }
 
-/* Narrow two-column desktop (1024–1129px): the half-width Columbus / Elio tiles
+/* Narrow two-column desktop (700–1129px): the half-width Columbus / Elio tiles
    get tight enough that the left-aligned brand name runs under the right-side
    cut-out. Rather than squeeze, mirror those two cut-outs to the top-LEFT (same
    as the mobile placement) so the name has the full tile width to its right —
    then drop the brand below the now-left notch. Research is a full-width banner,
    so it keeps its right-side notch and needs no drop. */
-@media (min-width: 1024px) and (max-width: 1129px) {
+@media (min-width: 700px) and (max-width: 1129px) {
   .bp-notch--columbus,
   .bp-notch--elio {
     right: auto;
@@ -318,7 +318,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   gap: 16px;
   margin-top: 18px;
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-card--columbus .bp-text,
   .bp-card--elio .bp-text {
     flex: 1 1 auto;
@@ -606,7 +606,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   transition: transform 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-visual { margin-top: 0; }
   .bp-card:hover .bp-visual { transform: translateY(-10px); }
   /* Columbus: the MacBook sits bled off the right edge — on hover it slides
@@ -673,7 +673,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   background: linear-gradient(180deg, #161719 0%, #303338 100%);
   border-radius: 0 0 6px 6px;
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-card--columbus .bp-visual {
     position: absolute;
     margin-top: 0;
@@ -743,7 +743,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   border-radius: 999px;
   z-index: 2;
 }
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .bp-card--elio .bp-visual {
     position: absolute;
     margin-top: 0;
@@ -758,7 +758,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
    the tagline sits close under the title (one content group) while the CTA gets
    clearer separation below it. A larger gap precedes the product visual. The
    taller cards are intentional. */
-@media (max-width: 1023px) {
+@media (max-width: 699px) {
   .bp-card { padding-top: 70px; padding-bottom: 46px; min-height: 480px; }
   .bp-card--wide { min-height: 360px; }
   .bp-text-bottom,
@@ -983,7 +983,7 @@ export function BentoProducts() {
                   aria-hidden
                   fill
                   className="bp-elio-bg"
-                  sizes="(max-width: 1023px) 100vw, 640px"
+                  sizes="(max-width: 699px) 100vw, (max-width: 1023px) 50vw, 640px"
                   quality={78}
                   placeholder="blur"
                   loading={warm ? "eager" : "lazy"}
@@ -1000,7 +1000,7 @@ export function BentoProducts() {
                     aria-hidden
                     fill
                     className="bp-columbus-bg"
-                    sizes="(max-width: 1023px) 100vw, 640px"
+                    sizes="(max-width: 699px) 100vw, (max-width: 1023px) 50vw, 640px"
                     quality={70}
                     placeholder="blur"
                     loading={warm ? "eager" : "lazy"}
@@ -1029,7 +1029,7 @@ export function BentoProducts() {
                         src={p.visual}
                         alt=""
                         aria-hidden
-                        sizes="(max-width: 1023px) calc(100vw - 84px), 440px"
+                        sizes="(max-width: 699px) calc(100vw - 84px), (max-width: 1023px) 50vw, 440px"
                         quality={80}
                         placeholder="blur"
                         loading={warm ? "eager" : "lazy"}
