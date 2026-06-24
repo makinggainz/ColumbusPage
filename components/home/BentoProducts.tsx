@@ -782,14 +782,16 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-card--elio .bp-text { max-width: 46%; }
 
   .bp-card--columbus .bp-visual {
-    width: clamp(440px, 66%, 600px);
+    /* Kept small enough that the bottom-anchored MacBook's top stays below
+       the brand row (≈104px) so the wordmark never overlaps the screen. */
+    width: clamp(380px, 56%, 470px);
     right: -56px;
   }
 
   .bp-card--elio .bp-visual {
-    width: clamp(205px, 27%, 230px);
+    width: clamp(215px, 30%, 245px);
     right: 44px;
-    bottom: -90px;
+    bottom: -105px;
   }
 }
 `;
