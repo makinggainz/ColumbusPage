@@ -789,8 +789,8 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   }
 
   .bp-card--elio .bp-visual {
-    width: clamp(215px, 30%, 245px);
-    right: 44px;
+    width: clamp(188px, 26%, 212px);
+    right: 92px;
     bottom: -105px;
   }
 }
