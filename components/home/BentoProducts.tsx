@@ -336,6 +336,13 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   align-items: center;
   gap: 11px;
 }
+/* Elio's wordmark is an image (its margin only crops within its clip box,
+   not the flex gap), so tighten Elio's gap directly on mobile so its
+   logo→name spacing scales like the smaller lockup. Desktop keeps 11px. */
+.bp-card--elio .bp-brand { gap: 7px; }
+@media (min-width: 1024px) {
+  .bp-card--elio .bp-brand { gap: 11px; }
+}
 .bp-logo {
   object-fit: contain;
   flex: 0 0 auto;
@@ -380,8 +387,8 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   font-size: 23.94px;
   transform: translateY(-0.03em);
   /* Pull the wordmark in tight against the globe mark (a touch less space
-     than Columbus). */
-  margin-left: -2.5px;
+     than Columbus). Larger pull on mobile keeps the gap scaled down. */
+  margin-left: -10px;
 }
 /* Axiforma sits optically high next to the globe mark — nudge it down so the
    wordmark reads vertically centred with the logo. Sized to match the Research
@@ -399,8 +406,10 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   transform: translateY(0.103em); /* centre glyph vertically with the logo */
   /* The Columbus globe PNG carries ~12% side padding (vs ~7% on the Elio /
      Research marks). With the larger logos that padding widens the visual
-     logo→name gap, so pull the wordmark in tight against the mark. */
-  margin-left: -1.5px;
+     logo→name gap, so pull the wordmark in tight against the mark. The
+     larger pull on mobile keeps the gap scaled to the smaller lockup
+     (the fixed 11px flex gap would otherwise read proportionally loose). */
+  margin-left: -8.5px;
 }
 
 /* Desktop: bump both wordmarks so their ink glyph height = 30px. */
@@ -425,7 +434,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   /* Mobile: image 33.51px tall → "Elio" ink glyph = 17px. */
   height: 33.51px;
   margin-top: -8.05px;   /* crop the top transparent padding */
-  margin-left: -3px;     /* crop left padding + a small nudge toward the logo */
+  margin-left: -5px;     /* crop left padding + nudge toward the logo (scaled gap) */
   filter: brightness(0) invert(1) drop-shadow(0 1px 4px rgba(0, 30, 60, 0.4));
 }
 .bp-elio-name-wrap {
