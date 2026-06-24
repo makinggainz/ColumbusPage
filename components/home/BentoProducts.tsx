@@ -767,6 +767,31 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-card--research .bp-text-bottom { margin-top: 16px; gap: 22px; }
   .bp-visual { margin-top: 50px; }
 }
+
+/* ── Full-width stacked range (700–1023px) ──────────────────────────────
+   Here the cards keep the horizontal desktop interior but are stacked at
+   FULL width — the half-width-tuned visual sizing (Columbus 77.76%+−170px,
+   Elio fixed 208px, 500px tall cards) leaves big dead space. Reorganize
+   into balanced wide banners: shorter cards, the MacBook enlarged to fill
+   the right side (clamped so it doesn't outgrow the height), a bigger Elio
+   phone anchored right, and the text rail given a sensible share. */
+@media (min-width: 700px) and (max-width: 1023px) {
+  .bp-card { height: 400px; }
+
+  .bp-card--columbus .bp-text,
+  .bp-card--elio .bp-text { max-width: 46%; }
+
+  .bp-card--columbus .bp-visual {
+    width: clamp(440px, 66%, 600px);
+    right: -56px;
+  }
+
+  .bp-card--elio .bp-visual {
+    width: clamp(205px, 27%, 230px);
+    right: 44px;
+    bottom: -90px;
+  }
+}
 `;
 
 interface Product {
