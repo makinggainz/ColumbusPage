@@ -766,6 +766,10 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-text-bottom,
   .bp-card--research .bp-text-bottom { margin-top: 16px; gap: 22px; }
   .bp-visual { margin-top: 50px; }
+  /* Tighter corner radius on the enlarged mobile Elio phone — the 38px/33px
+     desktop curve reads as too rounded at this larger on-screen size. */
+  .bp-phone { border-radius: 26px; }
+  .bp-phone-screen { border-radius: 22px; }
 }
 
 /* ── Full-width stacked range (700–1023px) ──────────────────────────────
