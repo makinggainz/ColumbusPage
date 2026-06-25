@@ -341,28 +341,27 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 /* Elio's wordmark is an image (its margin only crops within its clip box,
    not the flex gap), so tighten Elio's gap directly on mobile so its
    logo→name spacing scales like the smaller lockup. Desktop keeps 11px. */
-.bp-card--elio .bp-brand { gap: 7px; }
+.bp-card--elio .bp-brand { gap: 6.78px; }
 @media (min-width: 700px) {
-  .bp-card--elio .bp-brand { gap: 11px; }
+  .bp-card--elio .bp-brand { gap: 11.64px; }
 }
 .bp-logo {
   object-fit: contain;
   flex: 0 0 auto;
 }
-/* Logos follow a golden-ratio lockup: each mark's visible ink height = 1.6× the
-   wordmark cap height in its cell (cap = 17px mobile / 30px desktop), so the
-   symbol reads gently larger than the name and scales with it at every
-   breakpoint. Box height = (1.6 × cap) / ink-V-frac (the rest of each PNG is
-   transparent padding); width keeps the native aspect ratio.
-   → ink target = 27.2px mobile / 48px desktop.
+/* Logo lockup = the MIDPOINT of the two trialled treatments: each mark's visible
+   ink height = 1.465× the wordmark cap height (the average of the golden 1.6× and
+   the tighter 1.33× versions; cap = 17px mobile / 30px desktop). Pixel sizes below
+   are the golden sizes × 0.915625. Width keeps the native aspect ratio.
+   → ink target = 24.9px mobile / 43.95px desktop.
    ink-V-frac: Columbus 0.7555, Research 0.7431, Elio-mark 0.9333 (aspect 1.209). */
-.bp-card--columbus .bp-logo { width: 36.06px; height: 36.00px; }
-.bp-card--research .bp-logo  { width: 36.60px; height: 36.60px; }
-.bp-card--elio .bp-logo      { width: 35.23px; height: 29.14px; }
+.bp-card--columbus .bp-logo { width: 33.01px; height: 32.97px; }
+.bp-card--research .bp-logo  { width: 33.51px; height: 33.51px; }
+.bp-card--elio .bp-logo      { width: 32.26px; height: 26.68px; }
 @media (min-width: 700px) {
-  .bp-card--columbus .bp-logo { width: 63.64px; height: 63.53px; }
-  .bp-card--research .bp-logo  { width: 64.59px; height: 64.59px; }
-  .bp-card--elio .bp-logo      { width: 62.18px; height: 51.43px; }
+  .bp-card--columbus .bp-logo { width: 58.27px; height: 58.17px; }
+  .bp-card--research .bp-logo  { width: 59.14px; height: 59.14px; }
+  .bp-card--elio .bp-logo      { width: 56.94px; height: 47.09px; }
 }
 
 /* Brand name — sized just above the design-system h4 on the standard tiles
@@ -390,7 +389,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   transform: translateY(-0.03em);
   /* Pull the wordmark in tight against the globe mark (a touch less space
      than Columbus). Larger pull on mobile keeps the gap scaled down. */
-  margin-left: -10px;
+  margin-left: -8.29px;
 }
 /* Axiforma sits optically high next to the globe mark — nudge it down so the
    wordmark reads vertically centred with the logo. Sized to match the Research
@@ -411,13 +410,13 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
      logo→name gap, so pull the wordmark in tight against the mark. The
      larger pull on mobile keeps the gap scaled to the smaller lockup
      (the fixed 11px flex gap would otherwise read proportionally loose). */
-  margin-left: -8.5px;
+  margin-left: -8.22px;
 }
 
 /* Desktop: bump both wordmarks so their ink glyph height = 30px. */
 @media (min-width: 700px) {
-  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -7px; }
-  .bp-card--research .bp-name { font-size: 42.25px; margin-left: -9px; }
+  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -6.30px; }
+  .bp-card--research .bp-name { font-size: 42.25px; margin-left: -6.09px; }
 }
 
 /* Elio wordmark — the "Elio" glyphs occupy only the middle ~50% of the PNG
@@ -766,6 +765,10 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-text-bottom,
   .bp-card--research .bp-text-bottom { margin-top: 16px; gap: 22px; }
   .bp-visual { margin-top: 50px; }
+  /* Tighter corner radius on the enlarged mobile Elio phone — the 38px/33px
+     desktop curve reads as too rounded at this larger on-screen size. */
+  .bp-phone { border-radius: 26px; }
+  .bp-phone-screen { border-radius: 22px; }
 }
 
 /* ── Full-width stacked range (700–1023px) ──────────────────────────────
@@ -782,14 +785,16 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bp-card--elio .bp-text { max-width: 46%; }
 
   .bp-card--columbus .bp-visual {
-    width: clamp(440px, 66%, 600px);
+    /* Kept small enough that the bottom-anchored MacBook's top stays below
+       the brand row (≈104px) so the wordmark never overlaps the screen. */
+    width: clamp(380px, 56%, 470px);
     right: -56px;
   }
 
   .bp-card--elio .bp-visual {
-    width: clamp(205px, 27%, 230px);
-    right: 44px;
-    bottom: -90px;
+    width: clamp(188px, 26%, 212px);
+    right: 92px;
+    bottom: -105px;
   }
 }
 `;
