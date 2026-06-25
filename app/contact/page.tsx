@@ -97,31 +97,6 @@ const {
   quality: 75,
 });
 
-const FAQS: { q: string; a: React.ReactNode }[] = [
-  {
-    q: "What can I do with Columbus?",
-    a: "Columbus turns plain-language questions into map-grade answers — fresh spatial data, real geographic reasoning, and actual maps and reports as the output, not regurgitated text.",
-  },
-  {
-    q: "How quickly will I hear back?",
-    a: "Fast. Most inquiries get a reply within one business day — picking the tab that matches your request routes it straight to the right team.",
-  },
-  {
-    q: "Which tab should I use?",
-    a: "Columbus Pro for product demos and business use, Elio for travel and city-exploration questions, Investors for partnership and funding conversations, and Careers if you’d like to join the team.",
-  },
-  {
-    q: "Need help with an existing account?",
-    a: (
-      <>
-        Visit our <Link href="/help" className="underline hover:opacity-70 transition-opacity">Help center</Link>,{" "}
-        <Link href="/login" className="underline hover:opacity-70 transition-opacity">log in</Link> to chat with support,
-        join our <Link href="https://discord.gg/columbus" className="underline hover:opacity-70 transition-opacity">Discord</Link>,
-        or email <a href="mailto:support@columbus.earth" className="underline hover:opacity-70 transition-opacity">support@columbus.earth</a>.
-      </>
-    ),
-  },
-];
 
 /* A plus mark whose vertical bar collapses to a minus when open —
    the same icon idiom as components/business/FAQSection.tsx. */
@@ -345,6 +320,47 @@ function ContactPageInner() {
     if (!el || el.getBoundingClientRect().top < 140) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  /* Send a visitor back UP to the form on a chosen tab. Unlike
+     scrollToForm above, this has no `top < 140` guard — it's called
+     from the FAQ, which sits below the form, so the card is normally
+     above the viewport and must scroll up. */
+  const jumpToForm = (next: InquiryType) => {
+    setTab(next);
+    setTabKey(k => k + 1);
+    cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const FAQS: { q: string; a: React.ReactNode }[] = [
+    {
+      q: "What does Columbus Earth do?",
+      a: "Columbus Earth Corp. is a spatial frontier AI company building the first production Large Geospatial Model to answer the most difficult questions about our planet. We turn that research into products: Columbus Pro, agentic GIS for teams who work with the physical world, and Elio, our social super map for exploring your city and your travels.",
+    },
+    {
+      q: "How quickly will I hear back?",
+      a: "Most messages get a reply within one business day. Choosing the tab that fits your inquiry routes it straight to the right team, so the right people reach you faster.",
+    },
+    {
+      q: "Which tab should I use?",
+      a: "Pick Columbus Pro to book a demo or talk business, Elio for anything about our consumer map app, Investors for partnership and funding conversations, and Careers to join the team. Not sure where it fits? General inquiry reaches us for everything else.",
+    },
+    {
+      q: "Need help with an existing account?",
+      a: (
+        <>
+          Send us a note using{" "}
+          <button
+            type="button"
+            onClick={() => jumpToForm("general")}
+            className="underline hover:opacity-70 transition-opacity"
+          >
+            the form above
+          </button>{" "}
+          and we’ll get you taken care of.
+        </>
+      ),
+    },
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
