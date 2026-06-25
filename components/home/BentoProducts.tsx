@@ -404,7 +404,7 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
   /* Ink glyph height = 17px (mobile — sized so "Columbus Pro" fits a phone);
      desktop override → 30px. */
   font-size: 21.96px;
-  transform: translateY(0.103em); /* centre glyph vertically with the logo */
+  transform: translateY(calc(0.103em + 1px)); /* centre glyph vertically with the logo, nudged 1px down */
   /* The Columbus globe PNG carries ~12% side padding (vs ~7% on the Elio /
      Research marks). With the larger logos that padding widens the visual
      logo→name gap, so pull the wordmark in tight against the mark. The
