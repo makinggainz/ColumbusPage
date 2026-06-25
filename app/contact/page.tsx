@@ -338,7 +338,7 @@ function ContactPageInner() {
     },
     {
       q: "How quickly will I hear back?",
-      a: "Most messages get a reply within one business day. Choosing the tab that fits your inquiry routes it straight to the right team, so the right people reach you faster.",
+      a: "All messages get a reply within one business day.",
     },
     {
       q: "Which tab should I use?",
