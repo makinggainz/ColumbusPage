@@ -22,19 +22,19 @@ import { useState } from "react";
 const FAQS: { q: string; a: string }[] = [
   {
     q: "Why doesn't Claude or ChatGPT work?",
-    a: "General chat models are built for text, not space. They regurgitate old articles about an area, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.",
+    a: "General chat models are built for text, so they summarize old articles about a place, guess at coordinates, and can't reach live data or hand you a map. Columbus Pro is built for the physical world. It reasons across fresh, coordinate-accurate data and gives you real maps, layers, forecasts, and review-ready reports, all powered by Magellan, our spatial-reasoning engine.",
   },
   {
     q: "How do we collect our data?",
-    a: "We continuously ingest and fuse authoritative public, commercial, and partner datasets, then validate them spatially so what you query is current and coordinate-accurate — not scraped article text. Coverage and freshness keep expanding as new sources come online.",
+    a: "We pull from authoritative public, commercial, and partner datasets, fuse them together, and validate every layer spatially. The result is current, coordinate-accurate, and ready to query. The best of it lands in a curated data catalogue that's triple-checked and vetted with reputable partner organizations, so your layers overlay cleanly without manual reconciliation.",
   },
   {
     q: "What security measures do we take?",
-    a: "Business data is encrypted in transit and at rest, access is scoped per organization, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.",
+    a: "Your data is encrypted in transit and at rest. Access is scoped per organization, so it stays inside your team. Anything you upload or generate stays yours, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.",
   },
   {
     q: "Is this only for GIS professionals?",
-    a: "No. Columbus is designed so anyone — from analysts to non-technical teams — can ask spatial questions in plain language and get map-grade answers, while still giving GIS professionals the full depth and control they need.",
+    a: "No. Anyone on your team can ask the map a question in plain English and get a map-grade answer back, so you don't need a specialist to get going. And it stays easy without giving up depth: GIS professionals get the full control and transparent reasoning to take any project as far as it needs to go.",
   },
 ];
 
