@@ -77,7 +77,7 @@ export const RESEARCH_CARDS: ResearchCard[] = [
 
 export const RESEARCH_ARTICLES: ResearchArticle[] = [
   {
-    title: "MapsGPT Version 2.5. Architecture improvements.",
+    title: "Elio Version 2.5. Architecture improvements.",
     href: blogHref(BLOG_SLUG.mapsgptBuildingUseful),
     date: "Apr 2026",
   },
@@ -87,7 +87,7 @@ export const RESEARCH_ARTICLES: ResearchArticle[] = [
     date: "Mar 2026",
   },
   {
-    title: "MapsGPT. Building a consumer product",
+    title: "Elio. Building a consumer product",
     href: blogHref(BLOG_SLUG.mapsgptBuildingUseful),
     date: "Feb 2026",
   },

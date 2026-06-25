@@ -40,7 +40,14 @@ const nextConfig: NextConfig = {
       { source: "/products/enterprise", destination: "/products/business", permanent: true },
       { source: "/mapsgpt",     destination: "/products/consumer",   permanent: true },
       { source: "/products/mapsgpt", destination: "/products/consumer", permanent: true },
-      { source: "/maps-gpt",    destination: "/products/maps-gpt",   permanent: true },
+      // Was pointing at /products/maps-gpt, which doesn't exist (404). The
+      // consumer product (formerly MapsGPT) now lives at /products/consumer.
+      { source: "/maps-gpt",    destination: "/products/consumer",   permanent: true },
+      { source: "/products/maps-gpt", destination: "/products/consumer", permanent: true },
+      // Old business product ("Market Spy") URL → current business product.
+      { source: "/market-spy",  destination: "/products/business",   permanent: true },
+      // Blog post renamed MapsGPT → Elio; keep the old indexed URL alive.
+      { source: "/blog/mapsgpt-building-useful", destination: "/blog/elio-building-useful", permanent: true },
       // The Company page was formerly routed at /mission (and earlier /our-mission).
       { source: "/our-mission", destination: "/company",             permanent: true },
       { source: "/mission",     destination: "/company",             permanent: true },

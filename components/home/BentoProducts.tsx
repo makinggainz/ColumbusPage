@@ -410,12 +410,12 @@ video.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
      logo→name gap, so pull the wordmark in tight against the mark. The
      larger pull on mobile keeps the gap scaled to the smaller lockup
      (the fixed 11px flex gap would otherwise read proportionally loose). */
-  margin-left: -8.22px;
+  margin-left: -6.22px;
 }
 
 /* Desktop: bump both wordmarks so their ink glyph height = 30px. */
 @media (min-width: 700px) {
-  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -6.30px; }
+  .bp-card--columbus .bp-name { font-size: 38.76px; margin-left: -3.30px; }
   .bp-card--research .bp-name { font-size: 42.25px; margin-left: -6.09px; }
 }
 

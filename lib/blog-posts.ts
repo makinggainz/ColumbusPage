@@ -56,7 +56,7 @@ export const BLOG_SLUG = {
   lgmTimeline: "lgm-timeline",
   whyBuildingLgm: "why-building-lgm",
   firePredictonModel: "fire-prediction-model",
-  mapsgptBuildingUseful: "mapsgpt-building-useful",
+  mapsgptBuildingUseful: "elio-building-useful",
   elioChooseCities: "elio-choose-cities",
   elioMadridGuide: "elio-madrid-guide",
   elioEuropeGuide: "elio-europe-guide",
@@ -75,8 +75,8 @@ export const BLOG_SLUG = {
         update later as new articles ship. */
   earthRecipes: "earth-recipes-world-think",                  // → earthRecipesWorldThink
   erickFirePrediction: "fire-prediction-model",               // → firePredictonModel
-  mapsgptV25Architecture: "mapsgpt-building-useful",          // closest mapsgpt article
-  mapsgptConsumerProduct: "mapsgpt-building-useful",          // closest mapsgpt article
+  mapsgptV25Architecture: "elio-building-useful",          // closest mapsgpt article
+  mapsgptConsumerProduct: "elio-building-useful",          // closest mapsgpt article
   llmsGeospatialQueries: "why-llms-didnt-cut-it",             // closest LLM-vs-geo article
   generativeGeospatialLayers: "mapping-unknown-gen-layers",   // closest gen-layers article
   foundingLgmsInDepth: "philosophy-universal-lgm",            // closest LGM-foundation article
@@ -220,14 +220,14 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: BLOG_SLUG.mapsgptBuildingUseful,
-    title: "MapsGPT: Building a useful mapping AI",
+    title: "Elio: Building a useful mapping AI",
     date: "Apr 2026",
     publishedAt: "2026-04-01",
     image: mapsgptBlog,
     category: "PRODUCT",
     audience: "For builders",
     description:
-      "How Columbus Earth built MapsGPT — a mapping AI that returns actual maps and geographic reasoning, not just text. The design decisions behind making AI genuinely useful for location questions.",
+      "How Columbus Earth built Elio — a mapping AI that returns actual maps and geographic reasoning, not just text. The design decisions behind making AI genuinely useful for location questions.",
     paragraphs: ["lorem"],
   },
   {

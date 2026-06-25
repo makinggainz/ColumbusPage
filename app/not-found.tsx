@@ -85,7 +85,7 @@ export default function NotFound() {
         </p>
         <h1 className="h2 tracking-tight text-ink mt-4">Lost at sea.</h1>
         <p className="p-l text-muted mt-6 max-w-md">
-          This page doesn&apos;t exist — but there&apos;s plenty more to
+          This page doesn&apos;t exist, but there&apos;s plenty more to
           explore.
         </p>
         {/* CTA — canonical content pill (rounded-full, bg-cta surface,
