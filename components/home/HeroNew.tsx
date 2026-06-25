@@ -32,9 +32,41 @@ function slideLeft(ready: boolean, delayMs: number) {
  */
 
 const HN_CSS = `
+/* Single source of truth for the hero tint. The top-left glow and the ship
+   recolour both read these two registered custom properties, animated by ONE
+   keyframe on .hn-section (the common ancestor) — so they share one clock and
+   one value and can never drift apart. Two props because the glow wants the
+   colour at a low alpha while the SVG flood wants it opaque.
+   --hn-glow-col: translucent, drives the radial glow (per-colour alpha kept).
+   --hn-ship-col: opaque, drives the feFlood that recolours the blue ship. */
+@property --hn-glow-col {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(96, 148, 193, 0.35);
+}
+@property --hn-ship-col {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6094C1;
+}
+/* Crisp cycle: each colour HOLDS for ~28% of the loop, then SNAPS over ~5%
+   (~0.35s) to the next. Holding on exact-match colours + a quick snap is what
+   makes the ship read as always matching the glow (vs a long, soft cross-fade
+   that visibly diverges mid-transition). accent → Elio → Columbus → accent. */
+@keyframes hn-tint {
+  0%,  30% { --hn-glow-col: rgba(96, 148, 193, 0.35); --hn-ship-col: #6094C1; }
+  35%, 63% { --hn-glow-col: rgba(2, 157, 253, 0.42);  --hn-ship-col: #029DFD; }
+  68%, 96% { --hn-glow-col: rgba(10, 19, 66, 0.28);   --hn-ship-col: #0A1342; }
+  100%     { --hn-glow-col: rgba(96, 148, 193, 0.35); --hn-ship-col: #6094C1; }
+}
+
 .hn-section {
   position: relative;
   overflow: hidden;
+  /* Drives both the glow and the ship tint off one clock (see @property above).
+     Same 7s/1.95s as the old split animations so the entrance choreography
+     (hn-glow-in / hn-colorize) is unchanged. */
+  animation: hn-tint 7s linear 1.95s infinite;
   /* Match the surface colour of the section that follows the hero
      (PageFrame's #FFFFFF) so the bottom edge of the hero blends
      seamlessly into the next section. The radial vignette + left
@@ -274,11 +306,10 @@ const HN_CSS = `
   }
 }
 
-/* Blue glow — three stacked radials at top-left, cross-fading by opacity.
-   Animating opacity (not background) gives smooth browser interpolation.
-   Wrapper holds the entrance fade-in; children each own one color and
-   cross-fade in sequence: accent → elio blue (#029DFD) → columbus navy
-   (#0A1342) → accent, on a 7s linear loop starting after fade-in. */
+/* Blue glow — a single radial at top-left whose colour is the shared
+   --hn-glow-col custom property (animated by @keyframes hn-tint on .hn-section,
+   in lock-step with the ship recolour). The wrapper owns only the one-time
+   entrance fade-in. */
 @keyframes hn-glow-in {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -290,48 +321,10 @@ const HN_CSS = `
   z-index: 2;
   animation: hn-glow-in 1.6s ease-out 0.35s both;
 }
-.hn-glow-accent, .hn-glow-elio, .hn-glow-columbus {
+.hn-glow {
   position: absolute;
   inset: 0;
-}
-.hn-glow-accent {
-  background: radial-gradient(circle at top left, rgba(96, 148, 193, 0.35) 0%, rgba(255, 255, 255, 0) 28%);
-  animation: hn-glow-accent-cycle 7s ease-in-out 1.95s both infinite;
-}
-.hn-glow-elio {
-  background: radial-gradient(circle at top left, rgba(2, 157, 253, 0.42) 0%, rgba(255, 255, 255, 0) 28%);
-  animation: hn-glow-elio-cycle 7s ease-in-out 1.95s both infinite;
-}
-.hn-glow-columbus {
-  background: radial-gradient(circle at top left, rgba(10, 19, 66, 0.28) 0%, rgba(255, 255, 255, 0) 28%);
-  animation: hn-glow-columbus-cycle 7s ease-in-out 1.95s both infinite;
-}
-
-/* Each cycle: a short hold, then a long, eased cross-fade into the next
-   colour. Cross-fades span ~20% of 7s (~1.4s) and overlap (each colour fades
-   out exactly while the next fades in), with ease-in-out timing on the layers
-   — so the transitions are soft rather than sharp. */
-@keyframes hn-glow-accent-cycle {
-  0%   { opacity: 1; }
-  13%  { opacity: 1; }
-  33%  { opacity: 0; }
-  80%  { opacity: 0; }
-  100% { opacity: 1; }
-}
-@keyframes hn-glow-elio-cycle {
-  0%   { opacity: 0; }
-  13%  { opacity: 0; }
-  33%  { opacity: 1; }
-  46%  { opacity: 1; }
-  66%  { opacity: 0; }
-  100% { opacity: 0; }
-}
-@keyframes hn-glow-columbus-cycle {
-  0%   { opacity: 0; }
-  46%  { opacity: 0; }
-  66%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { opacity: 0; }
+  background: radial-gradient(circle at top left, var(--hn-glow-col) 0%, rgba(255, 255, 255, 0) 28%);
 }
 
 
@@ -495,19 +488,14 @@ export function HeroNew() {
             <feComponentTransfer in="bm" result="mask">
               <feFuncA type="linear" slope="5" intercept="-0.4" />
             </feComponentTransfer>
-            {/* Cycling tint colour, synced to the glow. */}
-            <feFlood floodColor="#6094C1" result="tint">
-              <animate
-                attributeName="flood-color"
-                begin="1.95s"
-                dur="7s"
-                repeatCount="indefinite"
-                calcMode="spline"
-                keyTimes="0;0.13;0.33;0.46;0.66;0.8;1"
-                keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"
-                values="#6094C1;#6094C1;#029DFD;#029DFD;#0A1342;#0A1342;#6094C1"
-              />
-            </feFlood>
+            {/* Cycling tint colour — reads the SAME shared custom property as the
+                top-left glow (--hn-ship-col, animated by @keyframes hn-tint on
+                .hn-section), so the ship recolour is always locked to the glow. */}
+            <feFlood
+              floodColor="var(--hn-ship-col)"
+              style={{ floodColor: "var(--hn-ship-col)" }}
+              result="tint"
+            />
             {/* Keep the tint only inside the blue mask, then colour-blend it
                 over the source so the ship/wave take the hue, keep their shading. */}
             <feComposite in="tint" in2="mask" operator="in" result="tintshape" />
@@ -583,12 +571,10 @@ export function HeroNew() {
           }}
         />
       </div>
-{/* Color-cycling glow — wrapper fades in; three stacked color
-          radials cross-fade by opacity for smooth transitions. */}
+{/* Color-cycling glow — wrapper fades in once; the single inner layer's
+          colour is driven by the shared --hn-glow-col clock (synced to the ship). */}
       <div className="hn-glow-wrap" aria-hidden="true">
-        <div className="hn-glow-accent" />
-        <div className="hn-glow-elio" />
-        <div className="hn-glow-columbus" />
+        <div className="hn-glow" />
       </div>
       <div className="hn-bounds">
         <h1
