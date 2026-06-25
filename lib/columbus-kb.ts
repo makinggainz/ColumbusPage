@@ -119,22 +119,22 @@ export const COLUMBUS_KB = {
     {
       q: "Why doesn't Claude or ChatGPT work?",
       a:
-        "General chat models are built for text, not space. They regurgitate old articles about an area, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.",
+        "General chat models are built for text, so they summarize old articles about a place, guess at coordinates, and can't reach live data or hand you a map. Columbus Pro is built for the physical world. It reasons across fresh, coordinate-accurate data and gives you real maps, layers, forecasts, and review-ready reports, all powered by Magellan, our geospatial-reasoning engine.",
     },
     {
       q: "How do we collect our data?",
       a:
-        "We continuously ingest and fuse authoritative public, commercial, and partner datasets, then validate them spatially so what you query is current and coordinate-accurate — not scraped article text. Coverage and freshness keep expanding as new sources come online.",
+        "We're the most versatile data collectors in the field. We run our own surveying and cartography, then pull from authoritative public, commercial, and partner datasets, fuse it all together, and validate every layer spatially. The result is current, coordinate-accurate, and ready to query. Columbus Pro's curated data catalogue is triple-checked and vetted with reputable partner organizations to deliver any dataset you may need.",
     },
     {
       q: "What security measures do we take?",
       a:
-        "Business data is encrypted in transit and at rest, access is scoped per organization, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.",
+        "Your data stays private and under your control. It's protected both while it's stored and while it travels between you and us, so it can't be read or intercepted by anyone else. Only the people you authorize can get in, your work is walled off from every other company, and you can always see exactly who did what. Most important for an AI company: we never use your private data to train shared models, so anything you upload or create stays yours. Under the hood, that's AES-256 encryption at rest, TLS 1.2 and 1.3 in transit, SSO through SAML and OIDC, role-based access, MFA, and full audit logging.",
     },
     {
       q: "Is this only for GIS professionals?",
       a:
-        "No. Columbus is designed so anyone — from analysts to non-technical teams — can ask spatial questions in plain language and get map-grade answers, while still giving GIS professionals the full depth and control they need.",
+        "No. We specifically designed Columbus Pro to be simple and intuitive to use by anyone without prior experience. Everyone on your team can ask the map a question in plain English and get an easy-to-read answer back. And it stays easy without giving up depth: GIS professionals get the full control and transparent reasoning to take any project as far as it needs to go.",
     },
   ],
 
@@ -246,7 +246,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "data",
     label: "What data does Columbus have?",
     response:
-      "We continuously ingest and fuse authoritative public, commercial, and partner datasets, then validate them spatially so what you query is current and coordinate-accurate — not scraped article text. You can also access proprietary, triple-checked data from our curated data catalogue.",
+      "We're the most versatile data collectors in the field. We run our own surveying and cartography, then fuse authoritative public, commercial, and partner datasets and validate every layer spatially, so what you query is current and coordinate-accurate. Columbus Pro's curated data catalogue is triple-checked and vetted with reputable partner organizations to deliver any dataset you may need.",
     keywords: [
       "data",
       "dataset",
@@ -259,13 +259,17 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
       "catalogue",
       "ingest",
       "where",
+      "survey",
+      "surveying",
+      "cartography",
+      "collect",
     ],
   },
   {
     id: "vs-chatgpt",
     label: "How is it different from ChatGPT?",
     response:
-      "General chat models are built for text, not space. They regurgitate old articles about an area, hallucinate coordinates, can't reach live data, and produce no map or GIS output. Columbus is built for the physical world — highest-fidelity fresh data, real spatial and contextual reasoning, and actual maps and visuals as the answer.",
+      "General chat models are built for text, so they summarize old articles about a place, guess at coordinates, and can't reach live data or hand you a map. Columbus Pro is built for the physical world. It reasons across fresh, coordinate-accurate data and gives you real maps, layers, forecasts, and review-ready reports, all powered by Magellan, our geospatial-reasoning engine.",
     keywords: [
       "chatgpt",
       "claude",
@@ -286,7 +290,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "security",
     label: "Is my data secure?",
     response:
-      "Business data is encrypted in transit and at rest, access is scoped per organization, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.",
+      "Your data stays private and under your control. It's protected both while it's stored and while it travels between you and us, so it can't be read or intercepted by anyone else. Only the people you authorize can get in, your work is walled off from every other company, and you can always see exactly who did what. Most important for an AI company: we never use your private data to train shared models, so anything you upload or create stays yours. Under the hood, that's AES-256 encryption at rest, TLS 1.2 and 1.3 in transit, SSO through SAML and OIDC, role-based access, MFA, and full audit logging.",
     keywords: [
       "secure",
       "security",
@@ -299,6 +303,13 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
       "data",
       "compliance",
       "soc",
+      "sso",
+      "saml",
+      "mfa",
+      "rbac",
+      "audit",
+      "aes",
+      "tls",
     ],
   },
   {
@@ -326,7 +337,7 @@ export const COLUMBUS_SUGGESTIONS: Suggestion[] = [
     id: "gis-expert",
     label: "Do I need to be a GIS expert?",
     response:
-      "No. Columbus is designed so anyone — from analysts to non-technical teams — can ask spatial questions in plain language and get map-grade answers, while still giving GIS professionals the full depth and control they need.",
+      "No. We specifically designed Columbus Pro to be simple and intuitive to use by anyone without prior experience. Everyone on your team can ask the map a question in plain English and get an easy-to-read answer back. And it stays easy without giving up depth: GIS professionals get the full control and transparent reasoning to take any project as far as it needs to go.",
     keywords: [
       "gis",
       "expert",
