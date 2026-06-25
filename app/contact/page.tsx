@@ -108,7 +108,7 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
   },
   {
     q: "Which tab should I use?",
-    a: "Columbus Pro for product demos and business use, Elio for MapsGPT projects, Investors for partnership and funding conversations, and Careers if you’d like to join the team.",
+    a: "Columbus Pro for product demos and business use, Elio for travel and city-exploration questions, Investors for partnership and funding conversations, and Careers if you’d like to join the team.",
   },
   {
     q: "Need help with an existing account?",
