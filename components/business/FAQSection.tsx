@@ -22,19 +22,19 @@ import { useState } from "react";
 const FAQS: { q: string; a: string }[] = [
   {
     q: "Why doesn't Claude or ChatGPT work?",
-    a: "General chat models are built for text, so they summarize old articles about a place, guess at coordinates, and can't reach live data or hand you a map. Columbus Pro is built for the physical world. It reasons across fresh, coordinate-accurate data and gives you real maps, layers, forecasts, and review-ready reports, all powered by Magellan, our spatial-reasoning engine.",
+    a: "General chat models are built for text, so they summarize old articles about a place, guess at coordinates, and can't reach live data or hand you a map. Columbus Pro is built for the physical world. It reasons across fresh, coordinate-accurate data and gives you real maps, layers, forecasts, and review-ready reports, all powered by Magellan, our geospatial-reasoning engine.",
   },
   {
     q: "How do we collect our data?",
-    a: "We pull from authoritative public, commercial, and partner datasets, fuse them together, and validate every layer spatially. The result is current, coordinate-accurate, and ready to query. The best of it lands in a curated data catalogue that's triple-checked and vetted with reputable partner organizations, so your layers overlay cleanly without manual reconciliation.",
+    a: "We're the most versatile data collectors in the field. We run our own surveying and cartography, then pull from authoritative public, commercial, and partner datasets, fuse it all together, and validate every layer spatially. The result is current, coordinate-accurate, and ready to query. Columbus Pro's curated data catalogue is triple-checked and vetted with reputable partner organizations to deliver any dataset you may need.",
   },
   {
     q: "What security measures do we take?",
-    a: "Your data is encrypted in transit and at rest. Access is scoped per organization, so it stays inside your team. Anything you upload or generate stays yours, and your private data is never used to train shared models. We support the controls business teams expect before rolling Columbus out across an organization.",
+    a: "Your data stays private and under your control. It's protected both while it's stored and while it travels between you and us, so it can't be read or intercepted by anyone else. Only the people you authorize can get in, your work is walled off from every other company, and you can always see exactly who did what. Most important for an AI company: we never use your private data to train shared models, so anything you upload or create stays yours. Under the hood, that's AES-256 encryption at rest, TLS 1.2 and 1.3 in transit, SSO through SAML and OIDC, role-based access, MFA, and full audit logging.",
   },
   {
     q: "Is this only for GIS professionals?",
-    a: "No. Anyone on your team can ask the map a question in plain English and get a map-grade answer back, so you don't need a specialist to get going. And it stays easy without giving up depth: GIS professionals get the full control and transparent reasoning to take any project as far as it needs to go.",
+    a: "No. We specifically designed Columbus Pro to be simple and intuitive to use by anyone without prior experience. Everyone on your team can ask the map a question in plain English and get an easy-to-read answer back. And it stays easy without giving up depth: GIS professionals get the full control and transparent reasoning to take any project as far as it needs to go.",
   },
 ];
 
